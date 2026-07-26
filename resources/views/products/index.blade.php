@@ -7,19 +7,35 @@
 
     <h1>Product Catalogue</h1>
 
-    {{-- Search Form --}}
+    {{-- Search & Filter Form --}}
     <form action="{{ route('products.index') }}" method="GET">
         <div>
-            <input 
-                type="text" 
-                name="search" 
-                placeholder="Search products..." 
+            {{-- Search Keyword Input --}}
+            <input
+                type="text"
+                name="search"
+                placeholder="Search products..."
                 value="{{ request('search') }}"
             >
+
+            {{-- Category Filter Dropdown --}}
+            <select name="category">
+                <option value="">All Categories</option>
+                @foreach ($categories as $category)
+                    <option
+                        value="{{ $category->id }}"
+                        @selected(request('category') == $category->id)
+                    >
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+
             <button type="submit">Search</button>
 
-            @if(request('search'))
-                <a href="{{ route('products.index') }}">Clear Search</a>
+            {{-- Display Clear Link if Search or Category Filter is Active --}}
+            @if(request('search') || request('category'))
+                <a href="{{ route('products.index') }}">Clear Filters</a>
             @endif
         </div>
     </form>
@@ -36,17 +52,16 @@
             </h2>
 
             <p>{{ $product->description }}</p>
-            
-            {{-- Defensive Category Output --}}
+
             <p>
-                <strong>Category:</strong> 
+                <strong>Category:</strong>
                 {{ $product->category?->name ?? 'No Category' }}
             </p>
 
             <hr>
         </div>
     @empty
-        <p>No products found matching your search.</p>
+        <p>No products found matching your search or filter criteria.</p>
     @endforelse
 
 </body>

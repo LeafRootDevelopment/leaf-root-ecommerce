@@ -119,3 +119,91 @@ Pass
 Evidence:
 clear search term.png
 
+----------------------------------------
+
+## Item: Category Filtering
+
+### Test: Filter by Indoor Plants
+
+Expected:
+Only products belonging to the Indoor Plants category are displayed.
+
+Actual:
+Monstera Deliciosa and Snake Plant displayed. Products from other categories were hidden.
+
+Result:
+Pass
+
+Evidence:
+filter by indoor plants.png
+
+---
+
+### Test: Display All Categories
+
+Expected:
+Selecting "All Categories" displays all available products.
+
+Actual:
+All products were displayed successfully.
+
+Result:
+Pass
+
+Evidence:
+display all categories.png
+---
+
+### Test: Clear Filters
+
+Expected:
+Clicking "Clear Filters" removes both search and category filters and displays all products.
+
+Actual:
+Search criteria and category selection were cleared and all products were displayed.
+
+Result:
+Pass
+
+Evidence:
+filter by indoor plants.png
+clear filters.png
+
+---
+
+### Test: Combined Search and Category Filter
+
+Search Term:
+plant
+
+Category:
+Indoor Plants
+
+Expected:
+Only products matching both the search term and selected category are displayed.
+
+Actual:
+Results were filtered correctly according to both criteria.
+
+Result:
+Pass
+
+Evidence:
+combined search and category filter.png
+
+---
+
+### Test: No Matching Products After Filtering
+
+Expected:
+When no products match the selected criteria, an appropriate message is displayed.
+
+Actual:
+The message "No products found matching your search or filter criteria." was displayed.
+
+Result:
+Pass
+
+Evidence:
+no products match search or filter.png
+
