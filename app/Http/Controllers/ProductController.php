@@ -7,11 +7,17 @@ use App\Models\Product;
 class ProductController extends Controller
 {
     public function index()
-    {
-        $products = Product::with('category')->get();
+{
+    $search = request('search');
 
-        return view('products.index', compact('products'));
-    }
+    $products = Product::with('category')
+        ->when($search, function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%");
+        })
+        ->get();
+
+    return view('products.index', compact('products'));
+}
 
     public function show(Product $product)
     {
