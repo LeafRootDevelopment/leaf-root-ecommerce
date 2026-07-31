@@ -228,4 +228,171 @@ admin dashboard loads.png
 
 ----------------------------------------
 
+## Admin Product Listing
+
+### Test: Admin Products Page Loads
+
+Expected:
+All products and their categories are displayed.
+
+Actual:
+All products and categories displayed successfully.
+
+Result:
+Pass
+
+Evidence:
+admin products page loads.png
+
+----------------------------------------
+
+## Create Product
+
+### Test: Create New Product
+
+Test Data:
+
+Name:
+Moisture Meter
+
+Description:
+Simple gardening tool used to monitor soil moisture levels accurately.
+
+Category:
+Accessories
+
+Expected:
+Product is saved successfully and appears in the Admin Product Listing page.
+
+Actual:
+Product was saved successfully and displayed in the Admin Product Listing page.
+
+Result:
+Pass
+
+Evidence:
+create new product.png
+admin products page.png
+
+----------------------------------------
+
+## Edit Product
+
+### Test: Update Existing Product
+
+Expected:
+Administrator can update product details.
+
+Actual:
+Product details updated successfully and displayed in the product listing.
+
+Result:
+Pass
+
+Evidence:
+update existing product1.png
+update existing product2.png
+
+----------------------------------------
+
+## Delete Product
+
+### Test: Delete Existing Product
+
+Test Objective:
+Verify that an administrator can successfully delete a product from the Admin Product Listing page.
+
+Test Steps:
+1. Navigate to:
+   /admin/products
+
+2. Locate an existing product.
+
+3. Click the "Delete Product" button.
+
+4. Confirm the deletion when prompted.
+
+Expected:
+- Product is deleted from the database.
+- Product no longer appears in the Admin Product Listing.
+- User is redirected back to the Admin Products page.
+- No errors are displayed.
+
+Actual:
+- Product was successfully deleted.
+- Product no longer appeared in the Admin Products list.
+- User was redirected back to the Admin Products page.
+- No errors were displayed.
+
+Result:
+Pass
+
+Evidence:
+delete existing product1.png
+delete existing product2.png
+delete existing product3.png
+
+----------------------------------------
+
+## Create Category
+
+### Test: Create New Category
+
+Test Objective:
+Verify that an administrator can successfully create a new category using the Category Management system.
+
+Test Data:
+Category Name: Garden Tools
+
+Test Steps:
+1. Navigate to:
+   /admin/categories/create
+
+2. Enter the category name:
+   Garden Tools
+
+3. Click the "Create Category" button.
+
+Expected Result:
+- The category is successfully saved to the database.
+- The user is redirected to the Admin Categories page.
+- The new category appears in the category list.
+
+Actual Result:
+- The category was successfully created.
+- The user was redirected to the Admin Categories page.
+- The new category "Garden Tools" appeared in the category list.
+
+Result:
+Pass
+
+Evidence:
+create category1.png
+create category2.png
+
+----------------------------------------
+
+## Edit Category
+
+### Test: Update Existing Category
+
+Test Data:
+Garden Tools → Garden Equipment
+
+Expected Result:
+The category is updated successfully and the new name is displayed in the Admin Categories list.
+
+Actual Result:
+The category was updated successfully and displayed with the new name.
+
+Result:
+Pass
+
+Evidence:
+edit category name1.png
+edit category name2.png
+
+----------------------------------------
+
+
 

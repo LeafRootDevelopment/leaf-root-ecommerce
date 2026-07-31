@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Str;
 
 class ProductManagementController extends Controller
 {
@@ -23,7 +25,9 @@ class ProductManagementController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+
+        return view('admin.products.create', compact('categories'));
     }
 
     /**
@@ -31,38 +35,64 @@ class ProductManagementController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Product::create([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+        ]);   
+        
+        return redirect()
+            ->route('admin.products.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        //
+    return view(
+        'admin.products.show',
+        compact('product'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified product.
      */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        //
+    $categories = Category::all();
+
+    return view(
+        'admin.products.edit',
+        compact('product', 'categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        //
-    }
+        $product->update([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+        ]);
+
+        return redirect()
+            ->route('admin.products.index');
+
+}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+   public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return redirect()
+        ->route('admin.products.index');
     }
 }
