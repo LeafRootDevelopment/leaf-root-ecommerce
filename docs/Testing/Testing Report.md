@@ -137,7 +137,7 @@ Pass
 Evidence:
 filter by indoor plants.png
 
----
+----------------------------------------
 
 ### Test: Display All Categories
 
@@ -152,7 +152,8 @@ Pass
 
 Evidence:
 display all categories.png
----
+
+----------------------------------------
 
 ### Test: Clear Filters
 
@@ -169,7 +170,7 @@ Evidence:
 filter by indoor plants.png
 clear filters.png
 
----
+----------------------------------------
 
 ### Test: Combined Search and Category Filter
 
@@ -191,7 +192,7 @@ Pass
 Evidence:
 combined search and category filter.png
 
----
+----------------------------------------
 
 ### Test: No Matching Products After Filtering
 
@@ -206,4 +207,25 @@ Pass
 
 Evidence:
 no products match search or filter.png
+
+----------------------------------------
+
+## Admin Dashboard
+
+### Test: Dashboard Loads
+
+Expected:
+Dashboard displays product and category totals.
+
+Actual:
+Dashboard displayed product and category totals successfully.
+
+Result:
+Pass
+
+Evidence:
+admin dashboard loads.png
+
+----------------------------------------
+
 
