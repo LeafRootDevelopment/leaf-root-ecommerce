@@ -210,7 +210,7 @@ no products match search or filter.png
 
 ----------------------------------------
 
-## Admin Dashboard
+## Admin Features
 
 ### Test: Dashboard Loads
 
@@ -228,8 +228,6 @@ admin dashboard loads.png
 
 ----------------------------------------
 
-## Admin Product Listing
-
 ### Test: Admin Products Page Loads
 
 Expected:
@@ -246,9 +244,7 @@ admin products page loads.png
 
 ----------------------------------------
 
-## Create Product
-
-### Test: Create New Product
+### Test: Admin Creates New Product
 
 Test Data:
 
@@ -276,9 +272,7 @@ admin products page.png
 
 ----------------------------------------
 
-## Edit Product
-
-### Test: Update Existing Product
+### Test: Admin Updates Existing Product
 
 Expected:
 Administrator can update product details.
@@ -295,9 +289,7 @@ update existing product2.png
 
 ----------------------------------------
 
-## Delete Product
-
-### Test: Delete Existing Product
+### Test: Admin Deletes Existing Product
 
 Test Objective:
 Verify that an administrator can successfully delete a product from the Admin Product Listing page.
@@ -334,9 +326,7 @@ delete existing product3.png
 
 ----------------------------------------
 
-## Create Category
-
-### Test: Create New Category
+### Test: Admin Creates New Category
 
 Test Objective:
 Verify that an administrator can successfully create a new category using the Category Management system.
@@ -372,9 +362,7 @@ create category2.png
 
 ----------------------------------------
 
-## Edit Category
-
-### Test: Update Existing Category
+### Test: Admin Updates Existing Category
 
 Test Data:
 Garden Tools → Garden Equipment
@@ -394,5 +382,83 @@ edit category name2.png
 
 ----------------------------------------
 
+### Test: Admin Deletes Existing Category
 
+Test Data:
+Test Category
+
+Expected Result:
+Category is deleted successfully and removed from the category list.
+
+Actual Result:
+Category was deleted successfully and no longer appeared in the Admin Categories list.
+
+Result:
+Pass
+
+Evidence:
+delete category1.png
+delete category2.png
+
+----------------------------------------
+
+### Test: Administrator Login
+
+Test Data:
+Email: admin@leafroot.test
+Password: password123
+
+Expected Result:
+Administrator is successfully authenticated and redirected to the Admin Dashboard.
+
+Actual Result:
+Administrator logged in successfully and was redirected to the Admin Dashboard.
+
+Result:
+Pass
+
+Evidence:
+admin login1.png
+admin login2.png
+
+----------------------------------------
+
+### Test: Unauthenticated User Access
+
+Test Data:
+Attempt to access:
+/admin
+/admin/products
+/admin/categories
+
+Expected Result:
+User is redirected to the login page.
+
+Actual Result:
+User was redirected to the login page.
+
+Result:
+Pass
+
+Evidence:
+route protection1.png
+route protection2.png
+route protection3.png
+
+----------------------------------------
+
+### Test: Administrator Logout
+
+Expected Result:
+User session is terminated and protected routes require re-authentication.
+
+Actual Result:
+User was logged out successfully and protected routes redirected to the login page.
+
+Result:
+Pass
+
+Evidence:
+admin logout1.png
+admin logout2.png
 
