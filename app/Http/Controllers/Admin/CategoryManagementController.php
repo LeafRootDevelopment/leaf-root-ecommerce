@@ -35,6 +35,10 @@ class CategoryManagementController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:255',
+        ]);
+
         Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
@@ -68,6 +72,10 @@ class CategoryManagementController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        $request->validate([
+            'name' => 'required|max:255',
+        ]);
+
         $category->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),

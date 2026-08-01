@@ -1,38 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-</head>
-<body>
+@extends('layouts.admin')
 
-    <h1>Admin Dashboard</h1>
+@section('title', 'Admin Dashboard - Leaf & Root')
+@section('header', 'Admin Dashboard')
 
-    {{-- User Greeting --}}
-    <p>
-        Logged in as: 
-        <strong>{{ Auth::user()->name ?? Auth::user()->email }}</strong>
-    </p>
-
+@section('content')
     <h2>System Overview</h2>
 
     <p>
         Total Products:
-        {{ $productCount }}
+        <strong>{{ $productCount }}</strong>
     </p>
 
     <p>
         Total Categories:
-        {{ $categoryCount }}
+        <strong>{{ $categoryCount }}</strong>
     </p>
 
-    {{-- Logout Form --}}
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-
-        <button type="submit">
-            Logout
-        </button>
-    </form>
-
-</body>
-</html>
+    <h2>Quick Actions</h2>
+    <ul>
+        <li>
+            <a href="{{ route('admin.products.create') }}">
+                + Add New Product
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('admin.categories.create') }}">
+                + Add New Category
+            </a>
+        </li>
+    </ul>
+@endsection

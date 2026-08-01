@@ -462,3 +462,125 @@ Evidence:
 admin logout1.png
 admin logout2.png
 
+----------------------------------------
+
+### Test: Empty Email
+
+Expected Result:
+Validation error displayed.
+
+Actual Result:
+Validation error displayed and login prevented.
+
+Result:
+Pass
+
+Evidence:
+email address required1.png
+email address required2.png
+
+----------------------------------------
+
+### Test: Invalid Email Format
+
+Expected Result:
+Validation error displayed.
+
+Actual Result:
+Validation error displayed and login prevented.
+
+Result:
+Pass
+
+Evidence:
+invalid email format1.png
+invalid email format2.png
+
+----------------------------------------
+
+### Test: Empty Password
+
+Expected Result:
+Validation error displayed.
+
+Actual Result:
+Validation error displayed and login prevented.
+
+Result:
+Pass
+
+Evidence:
+empty password1.png
+empty password2.png
+
+----------------------------------------
+
+### Test: Invalid Credentials
+
+Expected Result:
+Authentication fails and error message is displayed.
+
+Actual Result:
+Invalid credentials message displayed.
+
+Result:
+Pass
+
+Evidence:
+empty password1.png
+empty password2.png
+
+----------------------------------------
+
+### Test: Invalid Credentials
+
+Expected Result:
+Authentication fails and error message is displayed.
+
+Actual Result:
+Invalid credentials message displayed.
+
+Result:
+Pass
+
+Evidence:
+wrong password1.png
+wrong password2.png
+
+----------------------------------------
+
+### Test: Admin Dashboard Navigation
+
+Expected Result:
+Administrator can navigate between dashboard, products and categories.
+
+Actual Result:
+Navigation links functioned correctly.
+
+Result:
+Pass
+
+Evidence:
+admin navigation1.png
+admin navigation2.png
+admin navigation3.png
+
+----------------------------------------
+
+### Test: Admin Logout From Admin Area
+
+Expected Result:
+Administrator is logged out and redirected to the login page.
+
+Actual Result:
+Logout completed successfully and access to protected routes required re-authentication.
+
+Result:
+Pass
+
+Evidence:
+admin area logout1.png
+admin area logout2.png
+admin area logout3.png  
+
+----------------------------------------

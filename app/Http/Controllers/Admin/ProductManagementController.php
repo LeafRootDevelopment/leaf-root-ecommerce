@@ -16,7 +16,7 @@ class ProductManagementController extends Controller
     public function index()
     {
         $products = Product::with('category')->get();
-            
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -35,13 +35,19 @@ class ProductManagementController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
         Product::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
             'category_id' => $request->category_id,
-        ]);   
-        
+        ]);
+
         return redirect()
             ->route('admin.products.index');
     }
@@ -51,9 +57,10 @@ class ProductManagementController extends Controller
      */
     public function show(Product $product)
     {
-    return view(
-        'admin.products.show',
-        compact('product'));
+        return view(
+            'admin.products.show',
+            compact('product')
+        );
     }
 
     /**
@@ -61,11 +68,12 @@ class ProductManagementController extends Controller
      */
     public function edit(Product $product)
     {
-    $categories = Category::all();
+        $categories = Category::all();
 
-    return view(
-        'admin.products.edit',
-        compact('product', 'categories'));
+        return view(
+            'admin.products.edit',
+            compact('product', 'categories')
+        );
     }
 
     /**
@@ -73,6 +81,12 @@ class ProductManagementController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
         $product->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
@@ -82,17 +96,16 @@ class ProductManagementController extends Controller
 
         return redirect()
             ->route('admin.products.index');
-
-}
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-   public function destroy(Product $product)
+    public function destroy(Product $product)
     {
         $product->delete();
 
         return redirect()
-        ->route('admin.products.index');
+            ->route('admin.products.index');
     }
 }

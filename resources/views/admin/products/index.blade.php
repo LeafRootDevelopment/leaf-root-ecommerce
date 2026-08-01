@@ -1,41 +1,49 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Products</title>
-</head>
-<body>
+@extends('layouts.admin')
 
-    <h1>Admin Products</h1>
+@section('title', 'Manage Products - Leaf & Root')
+@section('header', 'Admin Products')
 
-    @foreach ($products as $product)
+@section('content')
+    <p>
+        <a href="{{ route('admin.products.create') }}">
+            + Create New Product
+        </a>
+    </p>
+
+    <h2>Product Listing</h2>
+
+    @forelse ($products as $product)
         <div>
-            <h2>{{ $product->name }}</h2>
+            <h3>{{ $product->name }}</h3>
 
             <p>
                 Category:
-                {{ $product->category?->name ?? 'No Category' }}
+                <strong>{{ $product->category?->name ?? 'No Category' }}</strong>
             </p>
 
-            {{-- 1. Corrected Edit Link --}}
+            {{-- Edit Product Link --}}
             <p>
                 <a href="{{ route('admin.products.edit', $product) }}">
                     Edit Product
                 </a>
             </p>
 
-            {{-- 2. Added Delete Form --}}
+            {{-- Delete Product Form --}}
             <form action="{{ route('admin.products.destroy', $product) }}" method="POST">
                 @csrf
                 @method('DELETE')
 
-                <button type="submit" onclick="return confirm('Are you sure you want to delete {{ $product->name }}?')">
+                <button
+                    type="submit"
+                    onclick="return confirm('Are you sure you want to delete {{ $product->name }}?')"
+                >
                     Delete Product
                 </button>
             </form>
 
             <hr>
         </div>
-    @endforeach
-
-</body>
-</html>
+    @empty
+        <p>No products found.</p>
+    @endforelse
+@endsection

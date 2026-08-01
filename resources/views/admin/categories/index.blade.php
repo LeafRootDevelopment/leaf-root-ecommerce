@@ -1,23 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Categories</title>
-</head>
-<body>
+@extends('layouts.admin')
 
-    <h1>Admin Categories</h1>
+@section('title', 'Manage Categories - Leaf & Root')
+@section('header', 'Admin Categories')
 
-    {{-- Create Category Link --}}
+@section('content')
     <p>
         <a href="{{ route('admin.categories.create') }}">
-            Create Category
+            + Create New Category
         </a>
     </p>
 
-    {{-- Category Loop --}}
-    @foreach ($categories as $category)
+    <h2>Category Listing</h2>
+
+    @forelse ($categories as $category)
         <div>
-            <h2>{{ $category->name }}</h2>
+            <h3>
+                {{ $category->name }}
+                @if (isset($category->products_count))
+                    ({{ $category->products_count }} {{ Str::plural('product', $category->products_count) }})
+                @endif
+            </h3>
 
             {{-- Edit Category Link --}}
             <p>
@@ -41,7 +43,7 @@
 
             <hr>
         </div>
-    @endforeach
-
-</body>
-</html>
+    @empty
+        <p>No categories found.</p>
+    @endforelse
+@endsection
