@@ -1,0 +1,43 @@
+# Sprint 2 Review
+
+## Objective
+
+To implement the transactional functionality of the Leaf & Root e-commerce system by enabling basket management, guest checkout and order processing.
+
+## Completed Features
+
+- Basket Management
+  - Basket Model
+  - Basket Item Model
+  - Add Products to Basket
+  - Update Quantities
+  - Remove Products
+  - Basket Total Calculation
+
+- Product Pricing
+  - Product Price Storage
+  - Product Price Display
+  - Product Price Validation
+
+- Checkout
+  - Checkout Form
+  - Customer Details Capture
+  - Checkout Validation
+  - Guest Checkout Workflow
+
+- Orders
+  - Order Model
+  - Order Item Model
+  - Orders Database Table
+  - Order Items Database Table
+  - Order Creation
+  - Order Confirmation Page
+  - Basket Clearing After Checkout
+
+## Outcome
+
+Customers can select products, manage basket contents, proceed through checkout, submit delivery information, place orders and receive a confirmation page. Order information and order items are stored successfully within the database, creating a complete end-to-end purchasing workflow.
+
+## Sprint Result
+
+Successful
