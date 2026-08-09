@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\Admin\CategoryManagementController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BasketController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +25,18 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
+
+Route::get('/basket', [BasketController::class, 'index'])
+    ->name('basket.index');
+
+Route::post('/basket/add/{product}', [BasketController::class, 'add'])
+    ->name('basket.add');
+
+Route::patch('/basket/update/{basketItem}', [BasketController::class, 'update'])
+    ->name('basket.update');
+
+Route::delete('/basket/remove/{basketItem}', [BasketController::class, 'remove'])
+    ->name('basket.remove');
 
 Route::middleware(['auth'])->group(function () {
 

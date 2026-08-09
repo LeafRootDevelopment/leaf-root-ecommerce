@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Basket;
 use App\Models\BasketItem;
 use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BasketController extends Controller
 {
     /**
      * Display the current basket.
      */
-    public function index()
+    public function index(): View
     {
         $basket = Basket::where(
             'session_id',
@@ -36,53 +38,68 @@ class BasketController extends Controller
     /**
      * Add a product to the basket.
      */
-    public function add(Product $product)
+    public function add(Request $request, Product $product): RedirectResponse
     {
+        // 1. Validate the submitted quantity from the form
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1|max:99',
+        ]);
+
+        $quantity = (int) $validated['quantity'];
+
+        // 2. Find or create the basket for the active session
         $basket = Basket::firstOrCreate([
             'session_id' => session()->getId(),
         ]);
 
-        $basketItem = BasketItem::where(
-            'basket_id',
-            $basket->id
-        )
-        ->where(
-            'product_id',
-            $product->id
-        )
-        ->first();
+        // 3. Find existing basket item or create a new line item
+        $basketItem = BasketItem::where('basket_id', $basket->id)
+            ->where('product_id', $product->id)
+            ->first();
 
         if ($basketItem) {
-            $basketItem->increment('quantity');
+            $basketItem->increment('quantity', $quantity);
         } else {
             BasketItem::create([
                 'basket_id' => $basket->id,
                 'product_id' => $product->id,
-                'quantity' => 1,
+                'quantity' => $quantity,
             ]);
         }
 
+        // 4. Redirect to basket view with feedback message
         return redirect()
             ->route('basket.index')
-            ->with('success', 'Product added to basket successfully.');
+            ->with('success', "{$product->name} (x{$quantity}) added to your basket successfully.");
     }
 
     /**
      * Update basket item quantity.
      */
-    public function update(
-        Request $request,
-        BasketItem $basketItem
-    ) {
-        $request->validate([
-            'quantity' => 'required|integer|min:1',
+    public function update(Request $request, BasketItem $basketItem): RedirectResponse
+    {
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1|max:99',
         ]);
 
         $basketItem->update([
-            'quantity' => $request->quantity,
+            'quantity' => $validated['quantity'],
         ]);
 
         return redirect()
             ->route('basket.index')
             ->with('success', 'Basket updated successfully.');
-   
+    }
+
+    /**
+     * Remove an item from the basket.
+     */
+    public function remove(BasketItem $basketItem): RedirectResponse
+    {
+        $basketItem->delete();
+
+        return redirect()
+            ->route('basket.index')
+            ->with('success', 'Product removed from basket successfully.');
+    }
+}

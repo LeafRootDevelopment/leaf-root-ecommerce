@@ -241,7 +241,186 @@ create zz plant3.png
 
 ----------------------------------------
 
-## Admin Features
+## Basket Functionality Testing
+
+### Test: Add Product To Basket
+
+Test Objective:
+
+Verify that a customer can add a product to the basket successfully.
+
+Test Data:
+Product: ZZ Plant
+Price: £24.99
+Quantity: 1
+
+Test Steps:
+
+1. Navigate to the Product Catalogue.
+2. Select the ZZ Plant product.
+3. Enter a quantity of 1.
+4. Click "Add To Basket".
+
+Expected Result:
+The product is successfully added to the basket and a confirmation message is displayed.
+
+Example:
+ZZ Plant (x1) added to your basket!
+
+Actual Result:
+The product was successfully added to the basket and the confirmation message was displayed.
+
+Result:
+Pass
+
+Evidence:
+basket add success1.png
+basket add success2.png
+
+----------------------------------------
+
+### Test: Basket Quantity Validation
+
+Test Objective:
+Verify that the basket quantity field validates invalid quantities.
+
+Test Data:
+Product: ZZ Plant
+Quantity: 0
+
+Test Steps:
+1. Navigate to the ZZ Plant product page.
+2. Set the quantity to 0.
+3. Submit the Add To Basket form.
+
+Expected Result:
+The basket item is not added and a validation error is displayed.
+
+Example:
+The quantity field must be at least 1.
+
+Actual Result:
+The validation error was displayed and the product was not added to the basket.
+
+Result:
+Pass
+
+Evidence:
+basket quantity validation1.png
+basket quantity validation2.png
+
+----------------------------------------
+
+### Test: Update Basket Quantity
+
+Test Objective:
+Verify that basket quantities can be updated successfully.
+
+Test Data:
+Product: ZZ Plant
+Original Quantity: 1
+Updated Quantity: 3
+Price: £24.99
+
+Test Steps:
+1. Navigate to the Basket page.
+2. Locate ZZ Plant.
+3. Change quantity from 1 to 3.
+4. Click "Update".
+
+Expected Result:
+A confirmation message is displayed.
+
+Example:
+Basket updated successfully.
+The basket total recalculates correctly.
+Expected Basket Total:
+£74.97
+
+Actual Result:
+The quantity updated successfully and the basket total recalculated correctly.
+
+Result:
+Pass
+
+Evidence:
+basket update1.png
+basket update2.png
+
+----------------------------------------
+
+### Test: Remove Basket Item
+
+Test Objective:
+Verify that products can be removed from the basket.
+
+Test Data:
+Product: ZZ Plant
+
+Test Steps:
+1. Navigate to the Basket page.
+2. Click "Remove".
+3. Confirm removal when prompted.
+
+Expected Result:
+The product is removed from the basket and a confirmation message is displayed.
+
+Example:
+Product removed from basket successfully.
+The basket updates accordingly.
+
+Actual Result:
+The product was removed successfully and the basket contents updated correctly.
+
+Result:
+Pass
+
+Evidence:
+basket remove1.png
+basket remove2.png
+
+----------------------------------------
+
+### Test: Basket Total Calculation
+
+Test Objective:
+Verify that basket totals are calculated correctly.
+
+Test Data:
+Product: ZZ Plant
+Price: £24.99
+Quantity: 2
+
+Test Steps:
+1. Add ZZ Plant to the basket.
+2. Update quantity to 2.
+3. Review line total and basket total.
+
+Expected Result:
+Line Total:
+£49.98
+Basket Total:
+£49.98
+
+Actual Result:
+Line totals and basket totals were calculated correctly.
+
+Result:
+Pass
+
+Evidence:
+basket totals1.png
+basket totals2.png
+
+----------------------------------------
+
+
+
+
+
+
+
+## Item: Admin Features
 
 ### Test: Dashboard Loads
 
