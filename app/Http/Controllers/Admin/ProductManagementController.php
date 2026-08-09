@@ -38,6 +38,7 @@ class ProductManagementController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
+            'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
         ]);
 
@@ -45,11 +46,13 @@ class ProductManagementController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
+            'price' => $request->price,
             'category_id' => $request->category_id,
         ]);
 
         return redirect()
-            ->route('admin.products.index');
+            ->route('admin.products.index')
+            ->with('success', 'Product created successfully.');
     }
 
     /**
@@ -84,6 +87,7 @@ class ProductManagementController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
+            'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
         ]);
 
@@ -91,11 +95,13 @@ class ProductManagementController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
+            'price' => $request->price,
             'category_id' => $request->category_id,
         ]);
 
         return redirect()
-            ->route('admin.products.index');
+            ->route('admin.products.index')
+            ->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -106,6 +112,7 @@ class ProductManagementController extends Controller
         $product->delete();
 
         return redirect()
-            ->route('admin.products.index');
+            ->route('admin.products.index')
+            ->with('success', 'Product deleted successfully.');
     }
 }

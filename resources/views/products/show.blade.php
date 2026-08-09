@@ -1,21 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ $product->name }} - Product Details</title>
-</head>
-<body>
+@extends('layouts.customer')
 
-    {{-- Back Link --}}
-    <p>
-        <a href="{{ route('products.index') }}">
-            &larr; Back to Product Catalogue
-        </a>
-    </p>
+@section('title', $product->name . ' - Product Details')
 
-    {{-- Product Details --}}
-    <h1>{{ $product->name }}</h1>
-    <p>{{ $product->description }}</p>
-    <p><strong>Category:</strong> {{ $product->category->name }}</p>
+@section('content')
 
-</body>
-</html>
+<p>
+    <a href="{{ route('products.index') }}">
+        &larr; Back to Product Catalogue
+    </a>
+</p>
+
+<h1>{{ $product->name }}</h1>
+
+<p>{{ $product->description }}</p>
+
+<p>
+    <strong>Price:</strong>
+    £{{ number_format($product->price, 2) }}
+</p>
+
+<p>
+    <strong>Category:</strong>
+    {{ $product->category?->name ?? 'Uncategorised' }}
+</p>
+
+@endsection

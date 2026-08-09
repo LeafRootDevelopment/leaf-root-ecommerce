@@ -52,7 +52,7 @@
             </h2>
 
             <p>{{ $product->description }}</p>
-
+            <p><strong>Price:</strong> {{ $product->formatted_price }}</p>
             <p>
                 <strong>Category:</strong>
                 {{ $product->category?->name ?? 'No Category' }}

@@ -49,6 +49,20 @@
             >{{ old('description') }}</textarea>
         </p>
 
+        {{-- Product Price Field --}}
+        <p>
+            <label for="price">Price:</label><br>
+            <input
+                type="number"
+                id="price"
+                name="price"
+                step="0.01"
+                min="0"
+                value="{{ old('price') }}"
+                required
+            >
+        </p>
+        
         {{-- Category Dropdown --}}
         <p>
             <label for="category_id">Category:</label><br>

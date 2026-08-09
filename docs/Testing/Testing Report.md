@@ -210,6 +210,37 @@ no products match search or filter.png
 
 ----------------------------------------
 
+## Item: Product Pricing
+
+### Test: Create ZZ Plant Product
+
+Test Data:
+
+Product Name:
+ZZ Plant
+
+Price:
+24.99
+
+Category:
+Indoor Plants
+
+Expected Result:
+The product is successfully created and appears in the product catalogue with the correct price and category.
+
+Actual Result:
+The product was successfully created and displayed with the correct price and category.
+
+Result:
+Pass
+
+Evidence: 
+create zz plant1.png
+create zz plant2.png
+create zz plant3.png
+
+----------------------------------------
+
 ## Admin Features
 
 ### Test: Dashboard Loads
@@ -584,3 +615,159 @@ admin area logout2.png
 admin area logout3.png  
 
 ----------------------------------------
+
+### Flash Message For Product Created
+
+Test Objective:
+Verify that a success flash message is displayed when a product is created.
+
+Test Data:
+Product Name: Test Product
+
+Description: Test Product Description
+
+Category: Indoor Plants
+
+Expected Result:
+The product is created successfully and the following message is displayed:
+
+Product created successfully.
+
+Actual Result:
+The product was created successfully and the success message was displayed.
+
+Result:
+Pass
+
+Evidence:
+product flash create1.png
+product flash create2.png
+
+----------------------------------------
+
+## Test: Flash Message for Product Updated
+
+Test Objective:
+Verify that a success flash message is displayed when a product is updated.
+
+Test Data:
+Original Product Name: Test Product
+
+Updated Product Name: Updated Test Product
+
+Expected Result:
+The product is updated successfully and the following message is displayed:
+
+Product updated successfully.
+
+Actual Result:
+The product was updated successfully and the success message was displayed.
+
+Result:
+Pass
+
+Evidence:
+product flash update1.png
+product flash update2.png
+
+----------------------------------------
+
+## Test: Flash Message for Product Deleted
+
+Test Objective:
+Verify that a success flash message is displayed when a product is deleted.
+
+Test Data:
+Product Name: Updated Test Product
+
+Expected Result:
+The product is deleted successfully and the following message is displayed:
+
+Product deleted successfully.
+
+Actual Result:
+The product was deleted successfully and the success message was displayed.
+
+Result:
+Pass
+
+Evidence:
+product flash delete1.png
+product flash delete2.png
+
+----------------------------------------
+
+## Test: Flash Message For Category Created
+
+Test Objective:
+Verify that a success flash message is displayed when a category is created.
+
+Test Data:
+Category Name: Test Category
+
+Expected Result:
+The category is created successfully and the following message is displayed:
+
+Category created successfully.
+
+Actual Result:
+The category was created successfully and the success message was displayed.
+
+Result:
+Pass
+
+Evidence:
+category flash create1.png
+category flash create2.png
+
+----------------------------------------
+
+## Test: Flash Messgae For Category Updated
+
+Test Objective:
+Verify that a success flash message is displayed when a category is updated.
+
+Test Data:
+Original Category Name: Test Category
+
+Updated Category Name: Updated Test Category
+
+Expected Result:
+The category is updated successfully and the following message is displayed:
+
+Category updated successfully.
+
+Actual Result:
+The category was updated successfully and the success message was displayed.
+
+Result:
+Pass
+
+Evidence:
+category flash update1.png
+category flash update2.png
+
+----------------------------------------
+
+## Test: Flash Message For Category Deleted
+
+Test Objective:
+Verify that a success flash message is displayed when a category is deleted.
+
+Test Data:
+Category Name: Updated Test Category
+
+Expected Result:
+The category is deleted successfully and the following message is displayed:
+
+Category deleted successfully.
+
+Actual Result:
+The category was deleted successfully and the success message was displayed.
+
+Result:
+Pass
+
+Evidence:
+category flash delete1.png
+category flash delete2.png

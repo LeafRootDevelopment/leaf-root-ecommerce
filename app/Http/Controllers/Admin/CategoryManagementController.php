@@ -45,7 +45,8 @@ class CategoryManagementController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.categories.index');
+            ->route('admin.categories.index')
+            ->with('success', 'Category created successfully.');
     }
 
     /**
@@ -82,7 +83,8 @@ class CategoryManagementController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.categories.index');
+            ->route('admin.categories.index')
+            ->with('success', 'Category updated successfully.');
     }
 
     /**
@@ -93,6 +95,7 @@ class CategoryManagementController extends Controller
         $category->delete();
 
         return redirect()
-            ->route('admin.categories.index');
+            ->route('admin.categories.index')
+            ->with('success', 'Category deleted successfully.');
     }
 }

@@ -7,30 +7,34 @@ use App\Models\Category;
 
 class ProductController extends Controller
 {
-public function index()
-{
-    $search = request('search');
-    $categoryId = request('category');
+    public function index()
+    {
+        $search = request('search');
+        $categoryId = request('category');
 
-    $products = Product::with('category')
-        ->when($search, function ($query, $search) {
+        $products = Product::with('category')
+            ->when($search, function ($query, $search) {
             $query->where('name', 'like', "%{$search}%");
-        })
-        ->when($categoryId, function ($query, $categoryId) {
+            })
+            ->when($categoryId, function ($query, $categoryId) {
             $query->where('category_id', $categoryId);
-        })
-        ->get();
+            })
+            ->get();
 
-    $categories = Category::all();
+        $categories = Category::all();
 
-    return view('products.index', compact(
-        'products',
-        'categories'
-    ));
-}
+        return view('products.index', compact(
+            'products',
+            'categories'
+        ));
+    }
 
     public function show(Product $product)
     {
-        return view('products.show', compact('product'));
+        $product->load('category');
+
+        return view(
+            'products.show',
+            compact('product'));
     }
 }
