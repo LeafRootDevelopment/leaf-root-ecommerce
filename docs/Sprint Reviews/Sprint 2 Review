@@ -2,41 +2,63 @@
 
 ## Objective
 
-To implement the transactional functionality of the Leaf & Root e-commerce system by enabling basket management, guest checkout and order processing.
+To implement the transactional functionality of the Leaf & Root e-commerce system by enabling basket management, product pricing, stock management, guest checkout and order processing.
 
 ## Completed Features
 
-- Basket Management
-  - Basket Model
-  - Basket Item Model
-  - Add Products to Basket
-  - Update Quantities
-  - Remove Products
-  - Basket Total Calculation
+### Basket Management
 
-- Product Pricing
-  - Product Price Storage
-  - Product Price Display
-  - Product Price Validation
+- Basket Model
+- Basket Item Model
+- Add Products to Basket
+- Direct Add To Basket from Product Catalogue
+- Update Quantities
+- Remove Products
+- Basket Total Calculation
 
-- Checkout
-  - Checkout Form
-  - Customer Details Capture
-  - Checkout Validation
-  - Guest Checkout Workflow
+### Product Pricing & Stock Management
 
-- Orders
-  - Order Model
-  - Order Item Model
-  - Orders Database Table
-  - Order Items Database Table
-  - Order Creation
-  - Order Confirmation Page
-  - Basket Clearing After Checkout
+- Product Price Storage
+- Product Price Display
+- Product Price Validation
+- Product Price Management
+- Product Stock Management
+- Product Stock Display
+- Stock Validation
+- Automatic Stock Reduction After Checkout
+
+### Checkout
+
+- Checkout Form
+- Customer Details Capture
+- Checkout Validation
+- Guest Checkout Workflow
+
+### Orders
+
+- Order Model
+- Order Item Model
+- Orders Database Table
+- Order Items Database Table
+- Order Creation
+- Order Confirmation Page
+- Basket Clearing After Checkout
+
+### Architecture & Quality Improvements
+
+- Dedicated Form Request Validation
+- Direct Add To Basket from Product Catalogue
+- Reusable Flash Message Component
+- Action-Based Checkout Processing
+- Database Transactions
+- Inventory Locking During Checkout
+- Automated Stock Management Testing
 
 ## Outcome
 
-Customers can select products, manage basket contents, proceed through checkout, submit delivery information, place orders and receive a confirmation page. Order information and order items are stored successfully within the database, creating a complete end-to-end purchasing workflow.
+Customers can browse products, view prices and stock availability, add items directly from the product catalogue or product details page, manage basket contents, calculate basket totals, proceed through checkout, submit delivery information, place orders and receive an order confirmation page.
+
+Order information and order items are stored successfully within the database, creating a complete end-to-end purchasing workflow. Product stock levels are validated during basket operations and automatically reduced following successful order completion, helping to prevent overselling and maintain accurate inventory levels.
 
 ## Sprint Result
 

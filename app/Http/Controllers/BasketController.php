@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddToBasketRequest;
 use App\Models\Basket;
 use App\Models\BasketItem;
 use App\Models\Product;
@@ -36,23 +37,19 @@ class BasketController extends Controller
     }
 
     /**
-     * Add a product to the basket.
+     * Add a product to the basket using dedicated Form Request validation.
      */
-    public function add(Request $request, Product $product): RedirectResponse
+    public function add(AddToBasketRequest $request, Product $product): RedirectResponse
     {
-        // 1. Validate the submitted quantity from the form
-        $validated = $request->validate([
-            'quantity' => 'required|integer|min:1|max:99',
-        ]);
-
+        $validated = $request->validated();
         $quantity = (int) $validated['quantity'];
 
-        // 2. Find or create the basket for the active session
+        // 1. Find or create the basket for active session
         $basket = Basket::firstOrCreate([
             'session_id' => session()->getId(),
         ]);
 
-        // 3. Find existing basket item or create a new line item
+        // 2. Find existing basket item or create new record
         $basketItem = BasketItem::where('basket_id', $basket->id)
             ->where('product_id', $product->id)
             ->first();
@@ -61,15 +58,15 @@ class BasketController extends Controller
             $basketItem->increment('quantity', $quantity);
         } else {
             BasketItem::create([
-                'basket_id' => $basket->id,
+                'basket_id'  => $basket->id,
                 'product_id' => $product->id,
-                'quantity' => $quantity,
+                'quantity'   => $quantity,
             ]);
         }
 
-        // 4. Redirect to basket view with feedback message
+        // 3. Redirect back preserving search/category query string filters
         return redirect()
-            ->route('basket.index')
+            ->back()
             ->with('success', "{$product->name} (x{$quantity}) added to your basket successfully.");
     }
 

@@ -11,7 +11,27 @@ class StoreCheckoutRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        // Set to true to allow public or logged-in checkout access.
+        // You can also enforce checks like: return auth()->check();
         return true;
+    }
+
+    /**
+     * Sanitize or modify input before validation rules are executed.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('postcode')) {
+            $this->merge([
+                'postcode' => strtoupper(trim((string) $this->postcode)),
+            ]);
+        }
+
+        if ($this->has('email')) {
+            $this->merge([
+                'email' => strtolower(trim((string) $this->email)),
+            ]);
+        }
     }
 
     /**
@@ -22,28 +42,31 @@ class StoreCheckoutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['required', 'string', 'max:50'],
-            'last_name'  => ['required', 'string', 'max:50'],
-            'email'      => ['required', 'email', 'max:255'],
-            'phone'      => ['nullable', 'string', 'max:20'],
+            'first_name' => ['required', 'string', 'max:100'],
+            'last_name'  => ['required', 'string', 'max:100'],
+            'email'      => ['required', 'email:rfc,dns', 'max:255'],
+            'phone'      => ['nullable', 'string', 'max:20', 'regex:/^[0-9\-\+\(\)\s]+$/'],
             'address'    => ['required', 'string', 'max:255'],
             'city'       => ['required', 'string', 'max:100'],
-            'postcode'   => ['required', 'string', 'max:10'],
+            'postcode'   => ['required', 'string', 'max:10', 'regex:/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i'],
         ];
     }
 
     /**
-     * Custom message formatting for validation attributes.
+     * Custom validation error messages.
      */
     public function messages(): array
     {
         return [
             'first_name.required' => 'Please enter your first name.',
             'last_name.required'  => 'Please enter your last name.',
-            'email.required'      => 'A valid email address is required for order updates.',
-            'address.required'    => 'Please provide a street address for delivery.',
-            'city.required'       => 'Please specify your city.',
-            'postcode.required'   => 'Please provide a valid postcode.',
+            'email.required'      => 'A valid email address is required for order confirmation.',
+            'email.email'         => 'Please provide a valid email address.',
+            'address.required'    => 'Please provide a delivery address.',
+            'city.required'       => 'Please specify your city or town.',
+            'postcode.required'   => 'A postcode is required for delivery.',
+            'postcode.regex'      => 'Please enter a valid postcode format (e.g., SW1A 1AA).',
+            'phone.regex'         => 'Please enter a valid phone number format.',
         ];
     }
 }

@@ -121,6 +121,29 @@ clear search term.png
 
 ----------------------------------------
 
+### Test: Product Price Display in Catalogue
+
+Test Objective:
+Verify that product prices are displayed correctly in the customer product catalogue.
+
+Test Steps:
+1. Navigate to /products.
+2. Review multiple product listings.
+
+Expected Result:
+Each product displays its price in pounds sterling (£).
+
+Actual Result:
+All products displayed the correct price beneath the product description.
+
+Result:
+Pass
+
+Evidence:
+catalogue pricing1.png
+
+----------------------------------------
+
 ## Item: Category Filtering
 
 ### Test: Filter by Indoor Plants
@@ -413,6 +436,306 @@ basket totals1.png
 basket totals2.png
 
 ----------------------------------------
+## Checkout Functionality Testing
+### Test: Successful Checkout
+
+Test Objective:
+Verify that a customer can successfully complete checkout.
+
+Test Data:
+Product: ZZ Plant
+Quantity: 3
+First Name: Jordan
+Last Name: Barker
+Email: admin@leafroot.test
+Phone: 01234567890
+Address: 123 High Street
+City: West Bromwich
+Postcode: B70 1AA
+
+Expected Result:
+The order is created successfully and the customer is redirected to the confirmation page.
+
+Actual Result:
+The order was created successfully and the confirmation page displayed the order details correctly.
+
+Result:
+Pass
+
+Evidence:
+checkout success1.png
+checkout success2.png
+
+----------------------------------------
+
+### Test: Order Creation
+
+Test Objective:
+Verify that checkout creates an order record.
+
+Expected Result:
+An order record is created in the database.
+
+Actual Result:
+Order #2 was successfully created and displayed on the confirmation page and as OrderItems in the database.
+
+Result:
+Pass
+
+Evidence:
+checkout success2.png
+order item creation1.png
+
+----------------------------------------
+
+### Test: Order Item Creation
+
+Test Objective:
+Verify that order items are stored correctly.
+
+Expected Result:
+The ordered products, quantities and prices are stored as OrderItems in the database.
+
+Actual Result:
+ZZ Plant was stored with quantity 3 and price £24.99 which is reflected on both the checkout success page as OrderItems.
+
+Result:
+Pass
+
+Evidence:
+checkout success2.png
+order item creation1.png
+
+----------------------------------------
+
+### Test: Order Total Calculation
+
+Test Objective:
+Verify that order totals are calculated correctly.
+
+Expected Result:
+£24.99 × 3 = £74.97
+
+Actual Result:
+The order total was calculated correctly and displayed as £74.97.
+
+Result:
+Pass
+
+Evidence:
+checkout success2.png
+order item creation1.png
+
+----------------------------------------
+
+### Test: Basket Cleared After Checkout
+
+Test Objective:
+Verify that the shopping basket is cleared after a successful checkout and order creation process.
+
+Test Data:
+Product: ZZ Plant
+Quantity: 3
+Order Total: £74.97
+
+Test Steps:
+1. Add ZZ Plant to the basket.
+2. Update the quantity to 3.
+3. Proceed to Checkout.
+4. Enter valid customer details.
+5. Submit the order.
+6. Wait for the Order Confirmation page to display.
+7. Navigate back to the Basket page.
+
+Expected Result:
+The basket is emptied after successful checkout and displays the empty basket message.
+
+Example:
+Your basket is currently empty.
+
+Actual Result:
+The basket was successfully emptied after checkout and displayed the empty basket message.
+
+Result:
+Pass
+
+Evidence:
+basket cleared1.png
+
+----------------------------------------
+
+### Test: Add Product To Basket From Catalogue
+
+Test Objective:
+Verify that customers can add products directly from the product catalogue page.
+
+Test Steps:
+1. Navigate to /products.
+2. Select a quantity.
+3. Click Add To Basket.
+
+Expected Result:
+The product is added to the basket without needing to view the product details page.
+
+Actual Result:
+The product was successfully added to the basket directly from the catalogue page and the basket updated correctly.
+
+Result:
+Pass
+
+Evidence:
+catalogue add basket1.png
+catalogue add basket2.png
+
+----------------------------------------
+
+### Test: Stock Validation During Add To Basket
+
+Test Objective:
+
+Verify that basket quantities cannot exceed available stock levels.
+
+Test Steps:
+1. Select a quantity greater than available stock.
+2. Submit the Add To Basket form.
+
+Expected Result:
+The system prevents the action and displays an appropriate validation message.
+
+Actual Result:
+The product was not added and a validation error message was displayed.
+
+Result:
+Pass
+
+Evidence:
+stock validation1.png
+
+----------------------------------------
+
+### Test: Product Stock Display
+
+Test Objective:
+Verify that product stock levels are displayed correctly to both customers and administrators.
+
+Test Data:
+Product: ZZ Plant
+Stock Level: 5
+
+Test Steps:
+1. Navigate to the Product Catalogue.
+2. Locate the ZZ Plant product.
+3. Verify the displayed stock level.
+4. Log in as an administrator.
+5. Navigate to Manage Products.
+6. Locate the ZZ Plant product.
+7. Verify the displayed stock level.
+ 
+Expected Result:
+The current stock quantity is displayed correctly on both the customer-facing catalogue and the admin product management page.
+
+Example:
+Stock: 5 available
+
+Actual Result:
+The stock level was displayed correctly on both the Product Catalogue and the Admin Products page.
+
+Result:
+Pass
+
+Evidence:
+catalogue stock1.png
+admin stock display1.png
+
+----------------------------------------
+
+### Test: Stock Validation
+
+Test Objective:
+Verify that customers cannot add a quantity greater than the available stock level.
+
+Test Data:
+Product: ZZ Plant
+Available Stock: 5
+Attempted Quantity: 6
+
+Test Steps:
+1. Set the stock level of ZZ Plant to 5.
+2. Navigate to the Product Catalogue.
+3. Enter a quantity of 6.
+4. Click "Add To Basket".
+
+Expected Result:
+The system prevents the action and displays an appropriate validation message.
+
+Example:
+The requested quantity exceeds available stock.
+
+Actual Result:
+The system prevented the product from being added to the basket and displayed a stock validation error message.
+
+Result:
+Pass
+
+Evidence:
+stock validation1.png
+
+----------------------------------------
+
+### Test: Stock Reduction After Checkout
+
+Test Objective:
+Verify that product stock levels are automatically reduced when an order is successfully placed.
+
+Test Data:
+Product: ZZ Plant
+Initial Stock: 5
+Ordered Quantity: 2
+Expected Remaining Stock: 3
+
+Test Steps:
+1. Set ZZ Plant stock level to 5.
+2. Add 2 ZZ Plants to the basket.
+3. Proceed through checkout.
+4. Complete the order successfully.
+5. Verify the stock level in the database.
+
+Expected Result:
+Product stock is reduced by the quantity purchased.
+
+Calculation:
+5 - 2 = 3
+
+Actual Result:
+The stock level was reduced from 5 to 3 after successful checkout completion.
+
+Result:
+Pass
+
+Evidence:
+stock reduction1.png
+stock reduction2.png
+stock reduction3.png
+stock reduction4.png
+
+----------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -824,7 +1147,7 @@ product flash create2.png
 
 ----------------------------------------
 
-## Test: Flash Message for Product Updated
+### Test: Flash Message for Product Updated
 
 Test Objective:
 Verify that a success flash message is displayed when a product is updated.
@@ -851,7 +1174,7 @@ product flash update2.png
 
 ----------------------------------------
 
-## Test: Flash Message for Product Deleted
+### Test: Flash Message for Product Deleted
 
 Test Objective:
 Verify that a success flash message is displayed when a product is deleted.
@@ -876,7 +1199,7 @@ product flash delete2.png
 
 ----------------------------------------
 
-## Test: Flash Message For Category Created
+### Test: Flash Message For Category Created
 
 Test Objective:
 Verify that a success flash message is displayed when a category is created.
@@ -901,7 +1224,7 @@ category flash create2.png
 
 ----------------------------------------
 
-## Test: Flash Messgae For Category Updated
+### Test: Flash Messgae For Category Updated
 
 Test Objective:
 Verify that a success flash message is displayed when a category is updated.
@@ -928,7 +1251,7 @@ category flash update2.png
 
 ----------------------------------------
 
-## Test: Flash Message For Category Deleted
+### Test: Flash Message For Category Deleted
 
 Test Objective:
 Verify that a success flash message is displayed when a category is deleted.
@@ -950,3 +1273,29 @@ Pass
 Evidence:
 category flash delete1.png
 category flash delete2.png
+
+----------------------------------------
+
+### Test: Product Price Display in Admin Product Management
+
+Test Objective:
+Verify that administrators can view product prices in the Manage Products page.
+
+Test Steps:
+1. Log in as an administrator.
+2. Navigate to /admin/products.
+
+Expected Result:
+Each product displays its assigned price.
+
+Actual Result:
+All products displayed the correct price alongside product names and categories.
+
+Result:
+Pass
+
+Evidence:
+admin product pricing1.png
+
+----------------------------------------
+

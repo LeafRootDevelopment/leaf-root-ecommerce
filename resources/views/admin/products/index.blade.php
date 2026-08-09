@@ -16,6 +16,18 @@
         <div>
             <h3>{{ $product->name }}</h3>
 
+            {{-- Product Price Section --}}
+            <p>
+                Price:
+                <strong>£{{ number_format($product->price, 2) }}</strong>
+            </p>
+
+            {{-- Product Stock Section --}}
+            <p>
+                Stock:
+                <strong>{{ $product->stock ?? 'N/A' }}</strong>
+            </p>
+
             <p>
                 Category:
                 <strong>{{ $product->category?->name ?? 'No Category' }}</strong>
