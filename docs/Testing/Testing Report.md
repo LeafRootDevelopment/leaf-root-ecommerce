@@ -1299,3 +1299,299 @@ admin product pricing1.png
 
 ----------------------------------------
 
+## Item: Admin Order Management
+### Test: Admin Orders Page Loads
+
+Expected:
+The Orders Management page loads and displays all customer orders.
+
+Actual:
+The Orders Management page loaded successfully and displayed all existing customer orders.
+
+Result:
+Pass
+
+Evidence:
+admin orders list1.png
+
+----------------------------------------
+
+### Test: Order Listing Displays Correct Information
+
+Test Objective:
+Verify that the Orders Management page displays the correct order information.
+
+Expected Result:
+Each order displays:
+
+Order ID
+Customer Name
+Email Address
+Order Total
+Order Status
+Date Created
+View Button
+
+Actual Result:
+All order information was displayed correctly for each order.
+
+Result:
+Pass
+
+Evidence:
+admin orders list1.png
+
+----------------------------------------
+
+### Test: View Order Details
+
+Test Objective:
+Verify that administrators can view detailed order information.
+
+Test Steps:
+1. Navigate to /admin/orders.
+2. Select an existing order.
+3. Click the "View" button.
+
+Expected Result:
+The Order Details page is displayed showing:
+
+Customer Details
+Delivery Address
+Order Items
+Quantities
+Total Cost
+Order Status
+
+Actual Result:
+The Order Details page loaded successfully and displayed all customer and order information correctly.
+
+Result:
+Pass
+
+Evidence:
+admin order details1.png
+
+----------------------------------------
+
+### Test: Order Item Display
+
+Test Objective:
+Verify that ordered products are displayed correctly on the Order Details page.
+
+Expected Result:
+Each order item displays:
+
+Product Name
+Quantity
+Unit Price
+Subtotal
+
+Actual Result:
+All ordered products were displayed correctly with their quantities, prices and subtotals.
+
+Result:
+Pass
+
+Evidence:
+admin order details1.png
+
+----------------------------------------
+
+### Test: Order Total Display
+
+Test Objective:
+Verify that the order total is displayed correctly.
+
+Expected Result:
+The Grand Total displayed matches the total stored for the order.
+
+Actual Result:
+The displayed Grand Total matched the order total stored in the database.
+
+Result:
+Pass
+
+Evidence:
+admin order details1.png
+
+----------------------------------------
+
+### Test: Update Order Status
+
+Test Objective:
+Verify that administrators can update order statuses.
+
+Test Data:
+Original Status:
+Pending
+
+Updated Status:
+Processing
+
+Test Steps:
+1. Open an existing order.
+2. Select a new status from the dropdown.
+3. Click "Update Status".
+
+Expected Result:
+Order status is updated successfully.
+Success flash message displayed.
+Updated status appears on the page.
+
+Actual Result:
+The order status updated successfully and the success message was displayed.
+
+Result:
+Pass
+
+Evidence:
+admin update status1.png
+admin update status2.png
+
+----------------------------------------
+
+### Test: Status Badge Display
+
+Test Objective:
+Verify that status badges display correctly for different order statuses.
+
+Expected Result:
+Order statuses display with their appropriate visual badge style.
+
+Examples:
+
+Pending
+Processing
+Dispatched
+Completed
+Cancelled
+
+Actual Result:
+Status badges displayed correctly for all tested order statuses.
+
+Result:
+Pass
+
+Evidence:
+admin update status2.png
+
+----------------------------------------
+
+### Test: Search Orders By Customer Name
+
+Test Data:
+Jordan
+
+Expected Result:
+Only orders matching the customer name are displayed.
+
+Actual Result:
+Matching orders were displayed successfully.
+
+Result:
+Pass
+
+Evidence:
+admin order search name1.png
+
+----------------------------------------
+
+### Test: Search Orders By Email Address
+
+Test Data:
+admin@leafroot.test
+
+Expected Result:
+Only orders matching the email address are displayed.
+
+Actual Result:
+Matching orders were displayed correctly.
+
+Result:
+Pass
+
+Evidence:
+admin order search email1.png
+
+----------------------------------------
+
+### Test: Search Orders By Order ID
+
+Test Data:
+1
+
+Expected Result:
+The corresponding order is displayed.
+
+Actual Result:
+The correct order was returned by the search.
+
+Result:
+Pass
+
+Evidence:
+admin order search id1.png
+
+----------------------------------------
+
+### Test: Search With Invalid Search Term
+
+Test Data:
+xyz123
+
+Expected Result:
+No matching orders message displayed.
+
+Actual Result:
+"No orders found matching your criteria." was displayed.
+
+Result:
+Pass
+
+Evidence:
+admin order search invalid1.png
+
+----------------------------------------
+
+### Test: Clear Order Search
+
+Expected Result:
+The search filter is removed and all orders are displayed.
+
+Actual Result:
+The search filter was cleared and all orders were displayed successfully.
+
+Result:
+Pass
+
+Evidence:
+admin order search clear1.png
+
+----------------------------------------
+
+### Test: Admin Orders Route Protection
+
+Test Objective:
+Verify that unauthenticated users cannot access the Orders Management system.
+
+Test Steps:
+1. Log out.
+2. Attempt to access:
+   /admin/orders
+   and
+   /admin/orders/1
+
+
+Expected Result:
+User is redirected to the login page.
+
+Actual Result:
+Unauthenticated users were redirected to the login page successfully.
+
+Result:
+Pass
+
+Evidence:
+admin orders route protection1.png
+admin orders route protection2.png
