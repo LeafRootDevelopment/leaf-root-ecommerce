@@ -1,0 +1,69 @@
+# Sprint 3 Review
+
+## Objective
+
+To implement administrator order management functionality within the Leaf & Root e-commerce system by providing a secure administrative interface for viewing, searching and managing customer orders.
+
+## Completed Features
+
+### Order Management
+
+- Order Management Controller
+- Admin Order Listing
+- Order Details Viewing
+- Order Status Updates
+- Order Status Management Interface
+- Order Status Validation
+
+### Order Search
+
+- Search Orders by Order ID
+- Search Orders by First Name
+- Search Orders by Last Name
+- Search Orders by Email Address
+- Search Result Filtering
+- Search Query Persistence
+
+### Order Details
+
+- Customer Details Display
+- Delivery Address Display
+- Order Item Display
+- Quantity Display
+- Unit Price Display
+- Order Subtotal Display
+- Order Total Display
+- Current Order Status Display
+
+### Administrative Interface Improvements
+
+- Manage Orders Navigation Link
+- Order Status Badges
+- Order Status Update Form
+- Success Flash Messages
+- Paginated Order Listing
+
+### Architecture & Quality Improvements
+
+- Dedicated Order Management Controller
+- Dedicated UpdateOrderStatusRequest Validation
+- Eloquent Search Scope
+- OrderStatus Backed Enum
+- Enum-Based Status Badge Styling
+- Enum Validation Rules
+- Eager Loading of Order Items and Products
+- SQL Wildcard Safe Search Handling
+- Strongly Typed Model Relationships
+- Improved Model Casting
+
+## Outcome
+
+Administrators can successfully access a dedicated Order Management area, view customer orders, search for specific orders, review detailed customer and delivery information, inspect purchased products and update order statuses throughout the fulfilment process.
+
+Order information is displayed through a structured administrative interface with pagination, search functionality and status indicators. Status updates are validated and stored successfully, allowing administrators to track order progress from Pending through to Completed or Cancelled.
+
+The implementation provides a complete order management workflow that complements the customer ordering functionality developed during Sprint 2 and improves operational visibility within the administrative area.
+
+## Sprint Result
+
+Successful
