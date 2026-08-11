@@ -1595,3 +1595,442 @@ Pass
 Evidence:
 admin orders route protection1.png
 admin orders route protection2.png
+
+----------------------------------------
+
+## Item: User Registration And Login
+### Test: Registration Page Loads
+
+Test Objective:
+Verify that the customer registration page loads correctly and displays all required registration fields.
+
+Test Steps:
+1. Navigate to /register.
+2. Observe the page contents.
+
+Expected Result:
+The registration page loads successfully and displays Name, Email Address, Password, Password Confirmation and Register button.
+
+Actual Result:
+The registration page loaded successfully and displayed all required registration fields.
+
+Result:
+Pass
+
+Evidence:
+registration page loads1.png
+
+----------------------------------------
+
+### Test: Successful Customer Registration
+
+Test Objective:
+Verify that a new customer account can be created successfully.
+
+Test Data:
+Name: Test User
+Email: tester@example.com
+Password: Password123
+Confirm Password: Password123
+
+Test Steps:
+1. Navigate to /register.
+2. Enter valid customer information.
+3. Click Register.
+
+Expected Result:
+A customer account is created and the customer is automatically logged in.
+
+Actual Result:
+The customer account was created successfully and the customer was logged in automatically.
+
+Result:
+Pass
+
+Evidence:
+registration success1.png
+registration success2.png
+
+----------------------------------------
+
+### Test: Duplicate Email Validation
+
+Test Objective:
+Verify that duplicate email addresses cannot be used to register multiple accounts.
+
+Test Data:
+Email: test@example.com
+
+Test Steps:
+1. Navigate to /register.
+2. Enter an email address that already exists.
+3. Complete the remaining fields.
+4. Submit the registration form.
+
+Expected Result:
+Registration is prevented and a validation error is displayed.
+
+Actual Result:
+Registration was prevented and the validation error was displayed successfully.
+
+Result:
+Pass
+
+Evidence:
+duplicate email1.png
+duplicate email2.png
+
+----------------------------------------
+
+### Test: Password Confirmation Validation
+
+Test Objective:
+Verify that registration requires matching passwords.
+
+Test Data:
+Password: Password123
+Confirm Password: Password456
+
+Test Steps:
+1. Navigate to /register.
+2. Complete the registration form.
+3. Enter different values for Password and Confirm Password.
+4. Submit the form.
+
+Expected Result:
+Registration fails and a validation error is displayed.
+
+Actual Result:
+Registration failed and the validation error was displayed successfully.
+
+Result:
+Pass
+
+Evidence:
+password confirmation validation1.png
+password confirmation validation2.png
+
+----------------------------------------
+
+### Test: Customer Role Assignment
+
+Test Objective:
+Verify that all newly registered users are automatically assigned the customer role.
+
+Test Steps:
+1. Register a new customer account.
+2. Open Laravel Tinker.
+3. Retrieve the newly created user record.
+
+Expected Result:
+The user record contains:
+role = customer
+
+Actual Result:
+The newly created account was assigned the customer role successfully.
+
+Result:
+Pass
+
+Evidence:
+registration success2.png
+customer role assignment1.png
+
+----------------------------------------
+
+### Test: Password Hashing
+
+Test Objective:
+Verify that customer passwords are stored securely as hashes.
+
+Test Steps:
+1. Register a new customer account.
+2. Open Laravel Tinker.
+3. Retrieve the user's password value from the database.
+
+Expected Result:
+The password is stored as a bcrypt hash and not plain text.
+
+Actual Result:
+The password was stored securely as a bcrypt hash.
+
+Result:
+Pass
+
+Evidence:
+password hashing1.png
+
+----------------------------------------
+
+### Item: Customer Authentication
+
+Test: Customer Login
+
+Test Objective:
+Verify that registered customers can authenticate successfully.
+
+Test Data:
+Email: tester@example.com
+Password: Password123
+
+Test Steps:
+1. Navigate to /login.
+2. Enter valid customer credentials.
+3. Click Login.
+
+Expected Result:
+Customer is authenticated successfully and redirected to the Product Catalogue.
+
+Actual Result:
+Customer login completed successfully and the customer was redirected to the Product Catalogue.
+
+Result:
+Pass
+
+Evidence:
+customer login1.png
+customer login2.png
+
+----------------------------------------
+
+### Test: Customer Logout
+
+Test Objective:
+Verify that customers can log out successfully.
+
+Test Steps:
+1. Log in as a customer.
+2. Click Logout.
+3. Attempt to access customer-only functionality.
+
+Expected Result:
+The customer session is terminated and guest navigation options become visible.
+
+Actual Result:
+The customer session terminated successfully and guest navigation options were displayed.
+
+Result:
+Pass
+
+Evidence:
+customer logout1.png
+customer logout2.png
+
+----------------------------------------
+
+## Item: Role-Based Authentication
+### Test: Customer Redirect After Login
+
+Test Objective:
+Verify that customers are redirected to the Product Catalogue after successful login.
+
+Test Data:
+Email: test@example.com
+Role: customer
+
+Test Steps:
+1. Navigate to /login.
+2. Enter customer credentials.
+3. Click Login.
+
+Expected Result:
+Customer is redirected to /products.
+
+Actual Result:
+Customer was redirected successfully to the Product Catalogue page.
+
+Result:
+Pass
+
+Evidence:
+customer login1.png
+customer login2.png
+
+----------------------------------------
+
+### Test: Administrator Redirect After Login
+
+Test Objective:
+Verify that administrators are redirected to the Admin Dashboard after successful login.
+
+Test Data:
+Email: admin@leafroot.test
+Role: admin
+
+Test Steps:
+1. Navigate to /login.
+2. Enter administrator credentials.
+3. Click Login.
+
+Expected Result:
+Administrator is redirected to /admin.
+
+Actual Result:
+Administrator was redirected successfully to the Admin Dashboard.
+
+Result:
+Pass
+
+Evidence:
+admin redirect1.png
+admin redirect2.png
+----------------------------------------
+
+## Item: Admin Route Protection
+### Test: Customer Access To Admin Dashboard
+
+Test Objective:
+Verify that customers cannot access administrator-only pages.
+
+Test Data:
+Customer Account:
+test@example.com
+
+Test Steps:
+1. Log in as a customer.
+2. Attempt to visit /admin.
+
+Expected Result:
+Customer is denied access and redirected to the Product Catalogue.
+
+Actual Result:
+Customer was denied access and redirected successfully.
+
+Result:
+Pass
+
+Evidence:
+customer admin denial1.png
+customer admin denial2.png
+
+----------------------------------------
+
+### Test: Customer Access To Product Management
+
+Test Objective:
+Verify that customers cannot access product management functionality.
+
+Test Steps:
+1. Log in as a customer.
+2. Attempt to visit /admin/products.
+
+Expected Result:
+Customer access is denied.
+
+Actual Result:
+Customer access was denied successfully.
+
+Result:
+Pass
+
+Evidence:
+customer admin denial1.png
+customer products management blocked1.png
+
+----------------------------------------
+
+### Test: Customer Access To Category Management
+
+Test Objective:
+Verify that customers cannot access category management functionality.
+
+Test Steps:
+1. Log in as a customer.
+2. Attempt to visit /admin/categories.
+
+Expected Result:
+Customer access is denied.
+
+Actual Result:
+Customer access was denied successfully.
+
+Result:
+Pass
+
+Evidence:
+customer admin denial1.png
+customer category management blocked1.png
+
+----------------------------------------
+
+### Test: Customer Access To Order Management
+
+Test Objective:
+Verify that customers cannot access order management functionality.
+
+Test Steps:
+1. Log in as a customer.
+2. Attempt to visit /admin/orders.
+
+Expected Result:
+Customer access is denied.
+
+Actual Result:
+Customer access was denied successfully.
+
+Result:
+Pass
+
+Evidence:
+customer admin denial1.png
+customer order management blocked1.png
+
+----------------------------------------
+
+### Test: Administrator Access To Protected Admin Routes
+
+Test Objective:
+Verify that administrators retain access to all protected administrator functionality.
+
+Test Data:
+Email: admin@leafroot.test
+Role: admin
+
+Test Steps:
+1. Log in as an administrator.
+2. Navigate to /admin.
+3. Navigate to /admin/products.
+4. Navigate to /admin/categories.
+5. Navigate to /admin/orders.
+
+Expected Result:
+Administrator can access all protected administrator functionality.
+
+Actual Result:
+Administrator successfully accessed all protected administrator functionality.
+
+Result:
+Pass
+
+Evidence:
+admin protected routes1.png
+admin protected routes2.png
+admin protected routes3.png
+admin protected routes4.png
+
+----------------------------------------
+
+### Test: Unauthorized Access Warning Message
+
+Test Objective:
+Verify that an appropriate warning is displayed when a customer attempts to access an admin-only area.
+
+Test Steps:
+1. Log in as a customer.
+2. Navigate to /admin.
+3. Observe the response.
+
+Expected Result:
+The message:
+'Unauthorized access. Admin privileges required.'
+is displayed.
+
+Actual Result:
+The unauthorized access warning was displayed successfully.
+
+Result:
+Pass
+
+Evidence:
+customer admin denial1.png
+customer admin denial2.png

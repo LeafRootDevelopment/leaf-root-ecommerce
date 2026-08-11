@@ -9,6 +9,13 @@ use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\RegisterController;
+
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,13 +27,34 @@ Route::get('/products', [ProductController::class, 'index'])
 Route::get('/products/{product}', [ProductController::class, 'show'])
     ->name('products.show');
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])
-    ->name('login');
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('guest')->group(function () {
+
+    Route::get('/login', [AuthController::class, 'showLoginForm'])
+        ->name('login');
+
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::get('/register', [RegisterController::class, 'create'])
+        ->name('register.show');
+
+    Route::post('/register', [RegisterController::class, 'store'])
+        ->name('register.store');
+});
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
+
+/*
+|--------------------------------------------------------------------------
+| Basket Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/basket', [BasketController::class, 'index'])
     ->name('basket.index');
@@ -40,6 +68,12 @@ Route::patch('/basket/update/{basketItem}', [BasketController::class, 'update'])
 Route::delete('/basket/remove/{basketItem}', [BasketController::class, 'remove'])
     ->name('basket.remove');
 
+/*
+|--------------------------------------------------------------------------
+| Checkout Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/checkout', [CheckoutController::class, 'index'])
     ->name('checkout.index');
 
@@ -49,7 +83,13 @@ Route::post('/checkout', [CheckoutController::class, 'store'])
 Route::get('/checkout/confirmation/{order}', [CheckoutController::class, 'confirmation'])
     ->name('checkout.confirmation');
 
-Route::middleware(['auth'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Admin Routes (Protected by auth and admin middleware)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin', [AdminDashboardController::class, 'index'])
         ->name('admin.dashboard');
