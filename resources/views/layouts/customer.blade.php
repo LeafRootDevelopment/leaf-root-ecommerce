@@ -56,12 +56,8 @@
                                     <i class="bi bi-bag-fill me-1"></i>
                                     Basket
                                     
-                                    {{-- Live Basket Count Badge --}}
-                                    @php
-                                        $basketCount = session('basket_count') 
-                                            ?? (isset($basket) && $basket ? $basket->items->sum('quantity') : 0);
-                                    @endphp
-                                    @if ($basketCount > 0)
+                                    {{-- Live Basket Count Badge composed globally in AppServiceProvider --}}
+                                    @if (($basketCount ?? 0) > 0)
                                         <span class="badge bg-success rounded-pill ms-1 fs-6 px-2 py-1">
                                             {{ $basketCount }}
                                         </span>
@@ -95,7 +91,7 @@
                             <li class="nav-item">
                                 <span class="nav-link text-dark fw-medium px-2">
                                     <i class="bi bi-person-circle text-secondary me-1"></i>
-                                    Welcome, <strong>{{ Auth::user()->first_name ?? Auth::user()->name }}</strong>
+                                    Welcome, <strong>{{ Auth::user()->first_name ?? Auth::user()->email }}</strong>
                                 </span>
                             </li>
 

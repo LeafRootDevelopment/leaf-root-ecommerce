@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderItem extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'order_id',
         'product_id',
+        'product_variant_id',
         'quantity',
         'price',
     ];
@@ -34,10 +38,26 @@ class OrderItem extends Model
     }
 
     /**
-     * Relationship: Item belongs to a product.
+     * Relationship: Item belongs to a base product.
      */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * Relationship: Item belongs to a product variant (if applicable).
+     */
+    public function variant(): BelongsTo
+    {
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
+    }
+
+    /**
+     * Calculate line item subtotal (quantity * snapshot price).
+     */
+    public function getSubtotalAttribute(): float
+    {
+        return (float) ($this->price * $this->quantity);
     }
 }

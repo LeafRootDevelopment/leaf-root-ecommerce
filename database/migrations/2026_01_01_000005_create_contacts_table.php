@@ -6,25 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('baskets', function (Blueprint $table) {
+        Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-
-            $table->string('session_id')->unique();
-
+            $table->string('name', 150);
+            $table->string('email', 191);
+            $table->string('subject', 191);
+            $table->text('message');
+            $table->string('status', 30)->default('unread');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('baskets');
+        Schema::dropIfExists('contacts');
     }
 };

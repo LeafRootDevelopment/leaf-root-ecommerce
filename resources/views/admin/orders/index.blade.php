@@ -71,12 +71,10 @@
                     <tbody>
                         @forelse ($orders as $order)
                             @php
-                                // Safe status resolution for String vs Enum status properties
                                 $rawStatus = is_object($order->status) && isset($order->status->value) 
                                     ? $order->status->value 
                                     : (string) ($order->status ?? 'Pending');
 
-                                // Badge color mappings
                                 $badgeClass = match (strtolower($rawStatus)) {
                                     'completed', 'delivered' => 'bg-success bg-opacity-75',
                                     'processing', 'shipped'  => 'bg-primary bg-opacity-75',
@@ -91,16 +89,23 @@
                                 $showRoute = Route::has('admin.orders.show') 
                                     ? route('admin.orders.show', $order) 
                                     : (Route::has('orders.show') ? route('orders.show', $order) : url('/admin/orders/' . $order->id));
+
+                                // Resolved user full name with guest fallback
+                                $customerName = $order->user 
+                                    ? trim($order->user->first_name . ' ' . $order->user->last_name) 
+                                    : ($order->full_name ?? 'Guest Customer');
+                                
+                                $customerEmail = $order->user?->email ?? 'N/A';
                             @endphp
                             <tr>
                                 <td class="ps-4 fw-bold text-dark">
                                     #{{ $order->id }}
                                 </td>
                                 <td class="fw-medium">
-                                    {{ $order->full_name ?? ($order->first_name ? $order->first_name . ' ' . $order->last_name : 'Guest Customer') }}
+                                    {{ $customerName ?: 'Guest Customer' }}
                                 </td>
                                 <td class="text-secondary small">
-                                    {{ $order->email }}
+                                    {{ $customerEmail }}
                                 </td>
                                 <td class="fw-bold text-success">
                                     £{{ number_format($order->total, 2) }}

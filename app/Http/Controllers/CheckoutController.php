@@ -63,7 +63,7 @@ class CheckoutController extends Controller
      */
     public function confirmation(Order $order): View
     {
-        $order->load('items.product');
+        $order->load(['items.product', 'user', 'address']);
 
         return view('checkout.confirmation', compact('order'));
     }

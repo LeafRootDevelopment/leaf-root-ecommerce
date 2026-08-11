@@ -11,7 +11,7 @@
         <div>
             <h4 class="alert-heading mb-1">Order Confirmed!</h4>
             <p class="mb-0">
-                Thank you, <strong>{{ $order->first_name }}</strong>! Your order <strong>#{{ $order->id }}</strong> has been placed successfully.
+                Thank you, <strong>{{ $order->user?->first_name ?? 'Valued Customer' }}</strong>! Your order <strong>#{{ $order->id }}</strong> has been placed successfully.
             </p>
         </div>
     </div>
@@ -27,8 +27,8 @@
                 <div class="card-body">
                     <ul class="list-unstyled mb-0">
                         <li class="mb-2"><strong>Order Reference:</strong> <span class="badge bg-secondary">#{{ $order->id }}</span></li>
-                        <li class="mb-2"><strong>Date:</strong> {{ $order->created_at->format('d M Y, H:i') }}</li>
-                        <li class="mb-0"><strong>Email:</strong> {{ $order->email }}</li>
+                        <li class="mb-2"><strong>Date:</strong> {{ $order->created_at->timezone('Europe/London')->format('d M Y, H:i') }}</li>
+                        <li class="mb-0"><strong>Email:</strong> {{ $order->user?->email ?? 'N/A' }}</li>
                     </ul>
                 </div>
             </div>
@@ -41,12 +41,22 @@
                     <h5 class="card-title mb-0">Delivery Address</h5>
                 </div>
                 <div class="card-body">
-                    <address class="mb-0">
-                        <strong>{{ $order->first_name }} {{ $order->last_name }}</strong><br>
-                        {{ $order->address }}<br>
-                        {{ $order->city }}<br>
-                        {{ $order->postcode }}
-                    </address>
+                    @if ($order->address)
+                        <address class="mb-0">
+                            @if ($order->user)
+                                <strong>{{ $order->user->first_name }} {{ $order->user->last_name }}</strong><br>
+                            @endif
+                            {{ $order->address->address_line1 }}<br>
+                            @if ($order->address->address_line2)
+                                {{ $order->address->address_line2 }}<br>
+                            @endif
+                            {{ $order->address->city }}<br>
+                            {{ $order->address->postal_code }}<br>
+                            {{ $order->address->country }}
+                        </address>
+                    @else
+                        <p class="text-muted mb-0">No delivery address recorded.</p>
+                    @endif
                 </div>
             </div>
         </div>

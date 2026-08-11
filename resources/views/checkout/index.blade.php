@@ -41,10 +41,11 @@
                         ? route('checkout.process') 
                         : url('/checkout')));
             
-            // Smart name parser for single name field fallbacks
             $user = auth()->user();
-            $defaultFirstName = old('first_name', $user->first_name ?? ($user->name ? explode(' ', $user->name)[0] : ''));
-            $defaultLastName = old('last_name', $user->last_name ?? ($user->name && count(explode(' ', $user->name)) > 1 ? implode(' ', array_slice(explode(' ', $user->name), 1)) : ''));
+            $defaultFirstName = old('first_name', $user?->first_name ?? '');
+            $defaultLastName  = old('last_name', $user?->last_name ?? '');
+            $defaultEmail     = old('email', $user?->email ?? '');
+            $defaultPhone     = old('phone', $user?->phone ?? '');
         @endphp
 
         <form action="{{ $checkoutAction }}" method="POST">
@@ -108,7 +109,7 @@
                                         id="email"
                                         name="email"
                                         class="form-control @error('email') is-invalid @enderror"
-                                        value="{{ old('email', $user->email ?? '') }}"
+                                        value="{{ $defaultEmail }}"
                                         autocomplete="email"
                                         required
                                     >
@@ -125,7 +126,7 @@
                                         id="phone"
                                         name="phone"
                                         class="form-control @error('phone') is-invalid @enderror"
-                                        value="{{ old('phone') }}"
+                                        value="{{ $defaultPhone }}"
                                         autocomplete="tel"
                                     >
                                     @error('phone')

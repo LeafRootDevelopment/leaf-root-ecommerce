@@ -9,7 +9,7 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        Category::insert([
+        $categories = [
             [
                 'name' => 'Indoor Plants',
                 'slug' => 'indoor-plants',
@@ -35,6 +35,13 @@ class CategorySeeder extends Seeder
                 'slug' => 'accessories',
                 'description' => 'Plant care accessories.'
             ],
-        ]);
+        ];
+
+        foreach ($categories as $category) {
+            Category::updateOrCreate(
+                ['slug' => $category['slug']],
+                $category
+            );
+        }
     }
 }

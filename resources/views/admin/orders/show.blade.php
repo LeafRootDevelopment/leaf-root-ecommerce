@@ -36,17 +36,26 @@
                     </h2>
                 </div>
                 <div class="card-body p-4">
+                    @php
+                        $customerName = $order->user 
+                            ? trim($order->user->first_name . ' ' . $order->user->last_name) 
+                            : ($order->full_name ?? 'Guest Customer');
+                    @endphp
                     <p class="mb-2">
                         <strong class="text-secondary">Name:</strong>
-                        <span class="fw-semibold">{{ $order->first_name }} {{ $order->last_name }}</span>
+                        <span class="fw-semibold">{{ $customerName ?: 'Guest Customer' }}</span>
                     </p>
                     <p class="mb-2">
                         <strong class="text-secondary">Email:</strong>
-                        <a href="mailto:{{ $order->email }}" class="text-decoration-none">{{ $order->email }}</a>
+                        @if ($order->user?->email)
+                            <a href="mailto:{{ $order->user->email }}" class="text-decoration-none">{{ $order->user->email }}</a>
+                        @else
+                            <span class="text-muted">N/A (Guest Checkout)</span>
+                        @endif
                     </p>
                     <p class="mb-0">
                         <strong class="text-secondary">Phone:</strong>
-                        {{ $order->phone ?? 'N/A' }}
+                        {{ $order->user?->phone ?? 'N/A' }}
                     </p>
                 </div>
             </div>
@@ -61,18 +70,34 @@
                     </h2>
                 </div>
                 <div class="card-body p-4">
-                    <p class="mb-2">
-                        <strong class="text-secondary">Address:</strong>
-                        {{ $order->address }}
-                    </p>
-                    <p class="mb-2">
-                        <strong class="text-secondary">City:</strong>
-                        {{ $order->city }}
-                    </p>
-                    <p class="mb-0">
-                        <strong class="text-secondary">Postcode:</strong>
-                        <span class="badge bg-light text-dark border">{{ $order->postcode }}</span>
-                    </p>
+                    @if ($order->address)
+                        <p class="mb-2">
+                            <strong class="text-secondary">Address:</strong><br>
+                            <span class="fw-medium">
+                                {{ $order->address->address_line1 }}
+                                @if ($order->address->address_line2)
+                                    <br>{{ $order->address->address_line2 }}
+                                @endif
+                            </span>
+                        </p>
+                        <p class="mb-2">
+                            <strong class="text-secondary">City / Region:</strong>
+                            {{ $order->address->city }}
+                            @if ($order->address->state_province)
+                                , {{ $order->address->state_province }}
+                            @endif
+                        </p>
+                        <p class="mb-2">
+                            <strong class="text-secondary">Country:</strong>
+                            {{ $order->address->country ?? 'N/A' }}
+                        </p>
+                        <p class="mb-0">
+                            <strong class="text-secondary">Postal Code:</strong>
+                            <span class="badge bg-light text-dark border">{{ $order->address->postal_code ?? 'N/A' }}</span>
+                        </p>
+                    @else
+                        <p class="text-muted mb-0">No delivery address associated with this order.</p>
+                    @endif
                 </div>
             </div>
         </div>
@@ -130,7 +155,6 @@
 
     {{-- Order Status Management Card --}}
     @php
-        // Safe status extraction handling both Strings and Backed Enums
         $rawStatus = is_object($order->status) && isset($order->status->value) 
             ? $order->status->value 
             : (string) ($order->status ?? 'Pending');
@@ -154,7 +178,6 @@
                     ? route('orders.update', $order) 
                     : url('/admin/orders/' . $order->id)));
 
-        // Safe Enum Case Collection
         $statusOptions = class_exists('\App\Enums\OrderStatus') 
             ? array_map(fn($case) => $case->value, \App\Enums\OrderStatus::cases()) 
             : ['Pending', 'Processing', 'Shipped', 'Completed', 'Cancelled'];
