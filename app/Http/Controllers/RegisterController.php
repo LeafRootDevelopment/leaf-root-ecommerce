@@ -22,19 +22,15 @@ class RegisterController extends Controller
     /**
      * Store a newly registered customer.
      */
-    public function store(
-        RegisterRequest $request
-    ): RedirectResponse {
-
+    public function store(RegisterRequest $request): RedirectResponse
+    {
         $validated = $request->validated();
 
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make(
-        $validated['password']
-        ),
-            'role' => 'customer',
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role'     => 'customer',
         ]);
 
         Auth::login($user);

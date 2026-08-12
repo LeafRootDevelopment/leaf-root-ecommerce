@@ -6,72 +6,43 @@ use App\Models\Address;
 use App\Models\Basket;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Product;
 use App\Models\User;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProcessCheckoutAction
 {
-    /**
-     * Process checkout in a single database transaction with pessimistic locking.
-     *
-     * @throws Exception
-     */
     public function execute(Basket $basket, array $validatedData, Request $request): Order
     {
         return DB::transaction(function () use ($basket, $validatedData, $request) {
-            // 1. Verify and lock product rows for update to prevent race conditions
-            foreach ($basket->items as $item) {
-                $product = Product::where('id', $item->product_id)
-                    ->lockForUpdate()
-                    ->first();
-
-                if ($product && isset($product->stock) && $product->stock < $item->quantity) {
-                    throw new Exception("Insufficient stock for '{$product->name}'. Available: {$product->stock}, Requested: {$item->quantity}.");
-                }
-            }
-
-            $total = $basket->items->sum(function ($item) {
-                return ($item->product->price ?? 0) * $item->quantity;
-            });
-
-            // 2. Resolve User & Sync Submitted Contact Details
+            // 1. Get or create user
             $user = auth()->user();
 
-            if ($user) {
-                $user->update([
-                    'first_name' => $validatedData['first_name'],
-                    'last_name'  => $validatedData['last_name'],
-                    'email'      => $validatedData['email'],
-                    'phone'      => $validatedData['phone'] ?? $user->phone,
-                ]);
-            } else {
-                $user = User::create([
-                    'first_name' => $validatedData['first_name'],
-                    'last_name'  => $validatedData['last_name'],
-                    'email'      => $validatedData['email'],
-                    'phone'      => $validatedData['phone'] ?? null,
-                    'password'   => bcrypt(Str::random(16)),
-                    'role'       => 'customer',
-                ]);
+            if (!$user) {
+                $user = User::firstOrCreate(
+                    ['email' => $validatedData['email']],
+                    [
+                        'name'     => $validatedData['first_name'] . ' ' . $validatedData['last_name'],
+                        'password' => bcrypt(Str::random(16)),
+                    ]
+                );
             }
 
-            // 3. Create or find the delivery Address record matching database column names
+            // 2. Map request fields to Address columns
             $address = Address::create([
-                'user_id'        => $user->id,
-                'address_line1'  => $validatedData['address'],
-                'address_line2'  => $validatedData['address_line2'] ?? null,
-                'city'           => $validatedData['city'],
-                'state_province' => null,
-                'postal_code'    => strtoupper($validatedData['postcode']),
-                'country'        => 'United Kingdom',
-                'is_default'     => false,
+                'user_id'       => $user->id,
+                'address_line1' => $validatedData['address'],
+                'city'          => $validatedData['city'],
+                'postal_code'   => $validatedData['postcode'],
             ]);
 
-            // 4. Create the Order linked to User and Address
+            // 3. Calculate total
+            $total = $basket->items->sum(function ($item) {
+                return $item->product->price * $item->quantity;
+            });
+
+            // 4. Create Order
             $order = Order::create([
                 'user_id'    => $user->id,
                 'address_id' => $address->id,
@@ -79,24 +50,22 @@ class ProcessCheckoutAction
                 'status'     => 'pending',
             ]);
 
-            // 5. Create OrderItems and decrement stock safely
+            // 5. Process items and decrement stock
             foreach ($basket->items as $item) {
                 OrderItem::create([
                     'order_id'   => $order->id,
                     'product_id' => $item->product_id,
-                    'price'      => $item->product->price,
                     'quantity'   => $item->quantity,
+                    'price'      => $item->product->price,
                 ]);
 
-                if (isset($item->product->stock)) {
-                    $item->product->decrement('stock', $item->quantity);
-                }
+                // Decrement stock directly on product
+                $item->product->decrement('stock', $item->quantity);
             }
 
-            // 6. Clear Basket and Session Data
+            // 6. Clear basket items & basket
             $basket->items()->delete();
             $basket->delete();
-            $request->session()->forget('basket_id');
 
             return $order;
         });

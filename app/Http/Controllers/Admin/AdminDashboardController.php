@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Contact;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\View\View;
@@ -18,11 +19,13 @@ class AdminDashboardController extends Controller
         $productCount = Product::count();
         $categoryCount = Category::count();
         $orderCount = Order::count();
+        $unreadContactCount = Contact::where('status', 'unread')->count();
 
         return view('admin.dashboard', compact(
             'productCount',
             'categoryCount',
-            'orderCount'
+            'orderCount',
+            'unreadContactCount'
         ));
     }
 }

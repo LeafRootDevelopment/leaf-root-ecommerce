@@ -44,4 +44,12 @@ class RegisterRequest extends FormRequest
             ],
         ];
     }
+    public function messages(): array
+    {
+        return [
+            'email.unique' => 'An account with this email address already exists.',
+            'password.confirmed' => 'The password confirmation does not match.',
+            'password.min' => 'Your password must be at least 8 characters long.',
+        ];
+    }
 }

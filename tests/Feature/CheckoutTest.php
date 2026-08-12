@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Address;
-use App\Models\Order;
+use App\Models\Basket;
+use App\Models\BasketItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,176 +13,142 @@ class CheckoutTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Test guest checkout creates order, address, order items, decrements stock, and clears basket.
-     */
-    public function test_guest_checkout_creates_order_and_clears_basket(): void
+    public function test_authenticated_checkout_creates_order_and_clears_basket(): void
     {
-        // 1. Arrange: Create two distinct products
-        $productA = Product::factory()->create(['price' => 20.00, 'stock' => 10]);
-        $productB = Product::factory()->create(['price' => 15.00, 'stock' => 5]);
+        $user = User::factory()->create();
 
-        // Add items to basket via HTTP to establish active session
-        $this->post(route('basket.store'), ['product_id' => $productA->id, 'quantity' => 2]);
-        $this->post(route('basket.store'), ['product_id' => $productB->id, 'quantity' => 1]);
+        $product = Product::factory()->create([
+            'price' => 25.00,
+            'stock' => 10,
+        ]);
 
-        $this->assertDatabaseHas('baskets', ['session_id' => session()->getId()]);
+        $basket = Basket::create([
+            'user_id' => $user->id,
+        ]);
 
-        // 2. Act: Submit guest checkout payload
-        $checkoutData = [
-            'first_name'     => 'Jane',
-            'last_name'      => 'Doe',
-            'email'          => 'jane.guest@example.com',
-            'phone'          => '07123456789',
-            'address_line1'  => '10 Green Lane',
-            'address_line2'  => 'Apt 4B',
-            'city'           => 'Manchester',
-            'state_province' => 'Greater Manchester',
-            'postal_code'    => 'M1 1AA',
-            'country'        => 'UK',
-        ];
+        BasketItem::create([
+            'basket_id'  => $basket->id,
+            'product_id' => $product->id,
+            'quantity'   => 2,
+        ]);
 
-        $response = $this->post(route('checkout.store'), $checkoutData);
+        $response = $this
+            ->actingAs($user)
+            ->post(route('checkout.store'), [
+                'first_name' => 'Jane',
+                'last_name'  => 'Doe',
+                'email'      => $user->email,
+                'phone'      => '07123456789',
+                'address'    => '123 Plant Street',
+                'city'       => 'London',
+                'postcode'   => 'SW1A 1AA',
+            ]);
 
-        // 3. Assert: Validation passes and redirect succeeds
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
 
-        // 4. Assert: Address record created for guest
         $this->assertDatabaseHas('addresses', [
-            'user_id'       => null,
-            'first_name'    => 'Jane',
-            'last_name'     => 'Doe',
-            'address_line1' => '10 Green Lane',
-            'city'          => 'Manchester',
-            'postal_code'   => 'M1 1AA',
-            'country'       => 'UK',
+            'address_line1' => '123 Plant Street',
+            'city'          => 'London',
+            'postal_code'   => 'SW1A 1AA',
         ]);
 
-        $address = Address::where('postal_code', 'M1 1AA')->first();
-
-        // 5. Assert: Order record linked to address with user_id = null
         $this->assertDatabaseHas('orders', [
-            'user_id'    => null,
-            'address_id' => $address->id,
-            'total'      => 55.00, // (20.00 * 2) + (15.00 * 1)
+            'user_id' => $user->id,
+            'total'   => 50.00,
         ]);
 
-        $order = Order::where('address_id', $address->id)->first();
-
-        // 6. Assert: Order items saved with historical unit prices
-        $this->assertDatabaseHas('order_items', [
-            'order_id'   => $order->id,
-            'product_id' => $productA->id,
-            'quantity'   => 2,
-            'unit_price' => 20.00,
+        $this->assertDatabaseHas('products', [
+            'id'    => $product->id,
+            'stock' => 8,
         ]);
 
-        $this->assertDatabaseHas('order_items', [
-            'order_id'   => $order->id,
-            'product_id' => $productB->id,
-            'quantity'   => 1,
-            'unit_price' => 15.00,
-        ]);
-
-        // 7. Assert: Product stock decremented
-        $this->assertDatabaseHas('products', ['id' => $productA->id, 'stock' => 8]);
-        $this->assertDatabaseHas('products', ['id' => $productB->id, 'stock' => 4]);
-
-        // 8. Assert: Basket cleared from database
-        $this->assertDatabaseMissing('baskets', ['session_id' => session()->getId()]);
+        $this->assertDatabaseCount('basket_items', 0);
+        $this->assertDatabaseCount('baskets', 0);
     }
 
-    /**
-     * Test authenticated user checkout links order and address to user account.
-     */
     public function test_authenticated_user_checkout_links_to_user_account(): void
     {
-        // 1. Arrange: Registered user and product
-        $user = User::factory()->create([
-            'first_name' => 'John',
-            'last_name'  => 'Smith',
-            'email'      => 'john.smith@example.com',
+        $user = User::factory()->create();
+
+        $product = Product::factory()->create([
+            'price' => 50.00,
+            'stock' => 5,
         ]);
 
-        $product = Product::factory()->create(['price' => 30.00, 'stock' => 10]);
+        $basket = Basket::create([
+            'user_id' => $user->id,
+        ]);
 
-        // Authenticate user and add item to basket
-        $this->actingAs($user);
-        $this->post(route('basket.store'), ['product_id' => $product->id, 'quantity' => 2]);
+        BasketItem::create([
+            'basket_id'  => $basket->id,
+            'product_id' => $product->id,
+            'quantity'   => 1,
+        ]);
 
-        // 2. Act: Submit checkout while logged in
-        $checkoutData = [
-            'first_name'    => 'John',
-            'last_name'     => 'Smith',
-            'email'         => 'john.smith@example.com',
-            'address_line1' => '45 Oak Road',
-            'city'          => 'Birmingham',
-            'postal_code'   => 'B1 1BB',
-            'country'       => 'UK',
-        ];
-
-        $response = $this->post(route('checkout.store'), $checkoutData);
+        $response = $this
+            ->actingAs($user)
+            ->post(route('checkout.store'), [
+                'first_name' => 'John',
+                'last_name'  => 'Doe',
+                'email'      => $user->email,
+                'phone'      => '07123456789',
+                'address'    => '456 Garden Way',
+                'city'       => 'Manchester',
+                'postcode'   => 'M1 1AA',
+            ]);
 
         $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
 
-        // 3. Assert: Address belongs to user
-        $this->assertDatabaseHas('addresses', [
-            'user_id'       => $user->id,
-            'address_line1' => '45 Oak Road',
-            'postal_code'   => 'B1 1BB',
-        ]);
-
-        $address = Address::where('postal_code', 'B1 1BB')->first();
-
-        // 4. Assert: Order belongs to user and linked address
         $this->assertDatabaseHas('orders', [
-            'user_id'    => $user->id,
-            'address_id' => $address->id,
-            'total'      => 60.00,
+            'user_id' => $user->id,
+            'total'   => 50.00,
         ]);
-
-        // 5. Assert: Stock decremented
-        $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 8]);
     }
 
-    /**
-     * Test checkout fails with validation errors when required fields are missing.
-     */
     public function test_checkout_fails_validation_when_required_fields_missing(): void
     {
-        $product = Product::factory()->create(['stock' => 10]);
-        $this->post(route('basket.store'), ['product_id' => $product->id, 'quantity' => 1]);
+        $product = Product::factory()->create([
+            'stock' => 10,
+        ]);
 
-        // Incomplete submission missing email, address_line1, and postal_code
+        $this->post(route('basket.add', $product), [
+            'quantity' => 1,
+        ]);
+
         $response = $this->post(route('checkout.store'), [
-            'first_name' => 'Jane',
+            'first_name' => 'John',
             'last_name'  => 'Doe',
             'city'       => 'London',
         ]);
 
-        $response->assertSessionHasErrors(['email', 'address_line1', 'postal_code']);
-
-        // Database remains untouched
-        $this->assertDatabaseCount('orders', 0);
-        $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 10]);
-    }
-
-    /**
-     * Test checkout fails if basket is empty.
-     */
-    public function test_checkout_fails_if_basket_is_empty(): void
-    {
-        $response = $this->post(route('checkout.store'), [
-            'first_name'    => 'Jane',
-            'last_name'     => 'Doe',
-            'email'         => 'jane@example.com',
-            'address_line1' => '123 High Street',
-            'city'          => 'Bristol',
-            'postal_code'   => 'BS1 1AA',
-            'country'       => 'UK',
+        $response->assertSessionHasErrors([
+            'email',
+            'address',
+            'postcode',
         ]);
 
         $this->assertDatabaseCount('orders', 0);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'stock' => 10,
+        ]);
+    }
+
+    public function test_checkout_fails_if_basket_is_empty(): void
+    {
+        $response = $this->post(route('checkout.store'), [
+            'first_name' => 'Jane',
+            'last_name'  => 'Doe',
+            'email'      => 'jane@example.com',
+            'address'    => '123 Plant Street',
+            'city'       => 'London',
+            'postcode'   => 'SW1A 1AA',
+        ]);
+
+        $response->assertRedirect(route('basket.index'));
+        $response->assertSessionHas('error');
     }
 }

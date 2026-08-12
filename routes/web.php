@@ -6,10 +6,12 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\Admin\CategoryManagementController;
 use App\Http\Controllers\Admin\OrderManagementController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +29,12 @@ Route::get('/products', [ProductController::class, 'index'])
 Route::get('/products/{product}', [ProductController::class, 'show'])
     ->name('products.show');
 
+Route::get('/contact', [ContactController::class, 'create'])
+    ->name('contact.create');
+
+Route::post('/contact', [ContactController::class, 'store'])
+    ->name('contact.store');
+
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
@@ -38,7 +46,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])
         ->name('login');
 
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('login.store');
 
     Route::get('/register', [RegisterController::class, 'create'])
         ->name('register.show');
@@ -47,8 +56,9 @@ Route::middleware('guest')->group(function () {
         ->name('register.store');
 });
 
-Route::post('/logout', [AuthController::class, 'logout'])
-    ->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->middleware('auth')
+        ->name('logout');
 
 /*
 |--------------------------------------------------------------------------
@@ -118,4 +128,30 @@ Route::middleware(['auth', 'admin'])->group(function () {
         '/admin/orders/{order}/status',
         [OrderManagementController::class, 'updateStatus']
     )->name('admin.orders.update-status');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Contact Routes
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/admin/contacts',
+        [AdminContactController::class, 'index']
+    )->name('admin.contacts.index');
+
+    Route::get(
+        '/admin/contacts/{contact}',
+        [AdminContactController::class, 'show']
+    )->name('admin.contacts.show');
+
+    Route::patch(
+        '/admin/contacts/{contact}/status',
+        [AdminContactController::class, 'updateStatus']
+    )->name('admin.contacts.update-status');
+
+    Route::delete(
+        '/admin/contacts/{contact}',
+        [AdminContactController::class, 'destroy']
+    )->name('admin.contacts.destroy');
 });
