@@ -22,8 +22,8 @@
             <div class="container">
 
                 <a href="{{ route('admin.dashboard') }}" class="navbar-brand d-flex align-items-center gap-2">
-                    <img src="{{ asset('images/Gemini_Generated_Image_eptl76eptl76eptl.png') }}" alt="Leaf & Root" style="height: 44px; width: auto;">
-                    <strong class="fs-5">Leaf &amp; Root <span class="text-success">Admin</span></strong>
+                    <img src="{{ asset('images/Leaf&Root LOGO.png') }}" alt="Leaf & Root" style="height: 44px; width: auto;">
+                    <strong class="fs-5 text-white">Leaf &amp; Root <span class="text-success">Admin</span></strong>
                 </a>
 
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">

@@ -28,7 +28,7 @@
 
                 {{-- Brand Logo / Name --}}
                 <a href="{{ Route::has('products.index') ? route('products.index') : url('/') }}" class="navbar-brand d-flex align-items-center gap-2">
-                    <img src="{{ asset('images/Gemini_Generated_Image_eptl76eptl76eptl.png') }}" alt="Leaf & Root" style="height: 50px; width: auto;">
+                    <img src="{{ asset('images/Leaf&Root LOGO.png') }}" alt="Leaf & Root" style="height: 50px; width: auto;">
                     <strong class="text-success fs-4 fw-bold">Leaf &amp; Root</strong>
                 </a>
 
