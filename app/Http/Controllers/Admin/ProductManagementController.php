@@ -16,7 +16,6 @@ class ProductManagementController extends Controller
     public function index()
     {
         $products = Product::with('category')->get();
-
         return view('admin.products.index', compact('products'));
     }
 
@@ -26,7 +25,6 @@ class ProductManagementController extends Controller
     public function create()
     {
         $categories = Category::all();
-
         return view('admin.products.create', compact('categories'));
     }
 
@@ -35,21 +33,33 @@ class ProductManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
             'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'image' => 'nullable|image|max:2048',
         ]);
 
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
+
         Product::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'category_id' => $request->category_id,
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'description' => $validated['description'],
+            'category_id' => $validated['category_id'],
+            'price' => $validated['price'],
+            'stock' => $validated['stock'],
+            'image_url' => $imagePath,
         ]);
 
         return redirect()
-            ->route('admin.products.index');
+            ->route('admin.products.index')
+            ->with('success', 'Product created successfully.');
     }
 
     /**
@@ -69,7 +79,6 @@ class ProductManagementController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::all();
-
         return view(
             'admin.products.edit',
             compact('product', 'categories')
@@ -81,21 +90,33 @@ class ProductManagementController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
             'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'image' => 'nullable|image|max:2048',
         ]);
 
+        $imagePath = $product->image_url;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
+
         $product->update([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'category_id' => $request->category_id,
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'description' => $validated['description'],
+            'category_id' => $validated['category_id'],
+            'price' => $validated['price'],
+            'stock' => $validated['stock'],
+            'image_url' => $imagePath,
         ]);
 
         return redirect()
-            ->route('admin.products.index');
+            ->route('admin.products.index')
+            ->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -104,8 +125,8 @@ class ProductManagementController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-
         return redirect()
-            ->route('admin.products.index');
+            ->route('admin.products.index')
+            ->with('success', 'Product deleted successfully.');
     }
 }

@@ -73,14 +73,8 @@ class CheckoutController extends Controller
      */
     private function getBasket(Request $request): ?Basket
     {
-        $query = Basket::query();
-
-        if (auth()->check()) {
-            $query->where('user_id', auth()->id());
-        } else {
-            $query->where('session_id', $request->session()->getId());
-        }
-
-return $query->with('items.product')->first();
+        return Basket::where('session_id', $request->session()->getId())
+            ->with('items.product')
+            ->first();
     }
 }
