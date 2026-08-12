@@ -7,6 +7,9 @@
 
     <h1>Product Catalogue</h1>
 
+    {{-- Reusable Alert/Flash Messages Component --}}
+    <x-flash-messages />
+
     {{-- Search & Filter Form --}}
     <form action="{{ route('products.index') }}" method="GET">
         <div>
@@ -52,17 +55,54 @@
             </h2>
 
             <p>{{ $product->description }}</p>
-
+            <p><strong>Price:</strong> {{ $product->formatted_price }}</p>
             <p>
                 <strong>Category:</strong>
                 {{ $product->category?->name ?? 'No Category' }}
             </p>
+
+            {{-- Availability Line --}}
+            <p>
+                <strong>Availability:</strong>
+                @if($product->isInStock())
+                    <span style="color: green;">In Stock ({{ $product->stock ?? 'Available' }})</span>
+                @else
+                    <span style="color: red;">Out of Stock</span>
+                @endif
+            </p>
+
+            {{-- Add To Basket Form or Disabled Action --}}
+            @if($product->isInStock())
+                <form action="{{ route('basket.add', $product) }}" method="POST" style="margin-top: 10px;">
+                    @csrf
+                    <div>
+                        <label for="quantity-{{ $product->id }}">Quantity:</label>
+                        <input
+                            type="number"
+                            id="quantity-{{ $product->id }}"
+                            name="quantity"
+                            value="1"
+                            min="1"
+                            max="{{ $product->max_quantity }}"
+                            style="width: 60px;"
+                            required
+                        >
+                        <button type="submit">Add To Basket</button>
+                    </div>
+                </form>
+            @else
+                <button disabled style="margin-top: 10px; opacity: 0.6; cursor: not-allowed;">
+                    Out of Stock
+                </button>
+            @endif
 
             <hr>
         </div>
     @empty
         <p>No products found matching your search or filter criteria.</p>
     @endforelse
-
+    <div style="margin-top: 20px;">
+    {{ $products->links() }}
+    </div>
 </body>
 </html>
