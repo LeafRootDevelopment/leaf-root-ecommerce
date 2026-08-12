@@ -5,10 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\Admin\CategoryManagementController;
-use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BasketController;
-use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,27 +25,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
-Route::get('/basket', [BasketController::class, 'index'])
-    ->name('basket.index');
-
-Route::post('/basket/add/{product}', [BasketController::class, 'add'])
-    ->name('basket.add');
-
-Route::patch('/basket/update/{basketItem}', [BasketController::class, 'update'])
-    ->name('basket.update');
-
-Route::delete('/basket/remove/{basketItem}', [BasketController::class, 'remove'])
-    ->name('basket.remove');
-
-Route::get('/checkout', [CheckoutController::class, 'index'])
-    ->name('checkout.index');
-
-Route::post('/checkout', [CheckoutController::class, 'store'])
-    ->name('checkout.store');
-
-Route::get('/checkout/confirmation/{order}', [CheckoutController::class, 'confirmation'])
-    ->name('checkout.confirmation');
-
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin', [AdminDashboardController::class, 'index'])
@@ -64,18 +40,4 @@ Route::middleware(['auth'])->group(function () {
         CategoryManagementController::class
     )->names('admin.categories');
 
-    Route::get(
-        '/admin/orders',
-        [OrderManagementController::class, 'index']
-    )->name('admin.orders.index');
-
-    Route::get(
-        '/admin/orders/{order}',
-        [OrderManagementController::class, 'show']
-    )->name('admin.orders.show');
-
-    Route::patch(
-        '/admin/orders/{order}/status',
-        [OrderManagementController::class, 'updateStatus']
-    )->name('admin.orders.update-status');
 });

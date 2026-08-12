@@ -11,8 +11,6 @@ class StoreCheckoutRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // Set to true to allow public or logged-in checkout access.
-        // You can also enforce checks like: return auth()->check();
         return true;
     }
 
@@ -21,15 +19,16 @@ class StoreCheckoutRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        if ($this->has('postcode')) {
+        if ($this->filled('email')) {
             $this->merge([
-                'postcode' => strtoupper(trim((string) $this->postcode)),
+                'email' => strtolower(trim((string) $this->input('email'))),
             ]);
         }
 
-        if ($this->has('email')) {
+        if ($this->filled('postcode') || $this->filled('postal_code')) {
+            $postcode = $this->input('postcode') ?? $this->input('postal_code');
             $this->merge([
-                'email' => strtolower(trim((string) $this->email)),
+                'postcode' => strtoupper(trim((string) $postcode)),
             ]);
         }
     }
@@ -42,13 +41,14 @@ class StoreCheckoutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['required', 'string', 'max:100'],
-            'last_name'  => ['required', 'string', 'max:100'],
-            'email'      => ['required', 'email:rfc,dns', 'max:255'],
-            'phone'      => ['nullable', 'string', 'max:20', 'regex:/^[0-9\-\+\(\)\s]+$/'],
-            'address'    => ['required', 'string', 'max:255'],
-            'city'       => ['required', 'string', 'max:100'],
-            'postcode'   => ['required', 'string', 'max:10', 'regex:/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i'],
+            'first_name'    => ['required', 'string', 'max:100'],
+            'last_name'     => ['required', 'string', 'max:100'],
+            'email'         => ['required', 'email:rfc', 'max:255'],
+            'phone'         => ['nullable', 'string', 'max:20', 'regex:/^[0-9\-\+\(\)\s]+$/'],
+            'address'       => ['required', 'string', 'max:255'],
+            'address_line2' => ['nullable', 'string', 'max:255'],
+            'city'          => ['required', 'string', 'max:100'],
+            'postcode'      => ['required', 'string', 'max:10', 'regex:/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i'],
         ];
     }
 

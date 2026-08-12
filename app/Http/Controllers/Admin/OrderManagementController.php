@@ -12,13 +12,14 @@ use Illuminate\View\View;
 class OrderManagementController extends Controller
 {
     /**
-     * Display a paginated listing of orders with search filtering.
+     * Display a paginated listing of orders with eager-loaded relations and search filtering.
      */
     public function index(Request $request): View
     {
         $search = $request->query('search');
 
-        $orders = Order::search($search)
+        $orders = Order::with(['user', 'address'])
+            ->search($search)
             ->latest()
             ->paginate(15)
             ->withQueryString();
@@ -27,11 +28,11 @@ class OrderManagementController extends Controller
     }
 
     /**
-     * Display order details with eager-loaded items and products.
+     * Display order details with eager-loaded user, address, items, and products.
      */
     public function show(Order $order): View
     {
-        $order->load('items.product');
+        $order->load(['user', 'address', 'items.product']);
 
         return view('admin.orders.show', compact('order'));
     }

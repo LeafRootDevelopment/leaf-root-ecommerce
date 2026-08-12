@@ -47,22 +47,7 @@
                 id="description" 
                 name="description" 
                 rows="4"
-                required
             >{{ old('description', $product->description) }}</textarea>
-        </p>
-
-        {{-- Product Price Field --}}
-        <p>
-            <label for="price">Price:</label><br>
-            <input
-                type="number"
-                id="price"
-                name="price"
-                step="0.01"
-                min="0"
-                value="{{ old('price', $product->price) }}"
-                required
-            >
         </p>
 
         {{-- Category Dropdown --}}

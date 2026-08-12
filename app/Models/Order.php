@@ -5,19 +5,18 @@ namespace App\Models;
 use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'address',
-        'city',
-        'postcode',
+        'user_id',
+        'address_id',
         'total',
         'status',
     ];
@@ -30,6 +29,30 @@ class Order extends Model
         return [
             'total' => 'decimal:2',
         ];
+    }
+
+    /**
+     * Get the user who placed this order (nullable for guest checkout).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the delivery address linked to this order.
+     */
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class);
+    }
+
+    /**
+     * Relationship: An order has many items.
+     */
+    public function items(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
     }
 
     /**
@@ -55,23 +78,22 @@ class Order extends Model
     }
 
     /**
-     * Relationship: An order has many items.
-     */
-    public function items(): HasMany
-    {
-        return $this->hasMany(OrderItem::class);
-    }
-
-    /**
-     * Accessor for customer's full name.
+     * Accessor for customer's full name (via linked User or fallback).
      */
     public function getFullNameAttribute(): string
     {
-        return "{$this->first_name} {$this->last_name}";
+        if ($this->user) {
+            return trim(
+                ($this->user->first_name ?? '') . ' ' .
+                ($this->user->last_name ?? '')
+            );
+        }
+
+        return 'Guest Customer';
     }
 
     /**
-     * Scope query to search orders by ID, First Name, Last Name, or Email.
+     * Scope query to search orders by ID, Customer Name, or Email via relations.
      */
     public function scopeSearch(Builder $query, ?string $term): Builder
     {
@@ -87,9 +109,11 @@ class Order extends Model
                 $subQuery->orWhere('id', (int) $term);
             }
 
-            $subQuery->orWhere('first_name', 'like', "%{$escapedTerm}%")
-                ->orWhere('last_name', 'like', "%{$escapedTerm}%")
-                ->orWhere('email', 'like', "%{$escapedTerm}%");
+            $subQuery->orWhereHas('user', function (Builder $userQuery) use ($escapedTerm) {
+                $userQuery->where('first_name', 'like', "%{$escapedTerm}%")
+                    ->orWhere('last_name', 'like', "%{$escapedTerm}%")
+                    ->orWhere('email', 'like', "%{$escapedTerm}%");
+            });
         });
     }
 }
