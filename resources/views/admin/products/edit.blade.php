@@ -68,12 +68,25 @@
 
                     @if ($product->image_url)
                         <div class="mb-2">
-                            <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px;">
+                            <span class="small text-muted d-block mb-1">Current image:</span>
+                            <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" style="width: 120px; height: 90px; object-fit: cover; border-radius: 6px;">
                         </div>
                     @endif
 
-                    <input type="file" id="image" name="image" accept="image/*" class="form-control">
-                    <div class="form-text">Leave blank to keep the current image. Max 2MB.</div>
+                    <input type="file" id="image" accept="image/*" class="form-control">
+                    <div class="form-text">Leave blank to keep the current image. Select a new one to replace it.</div>
+
+                    <div class="mt-3" id="cropContainer" style="display: none; max-width: 500px;">
+                        <img id="cropPreview" style="max-width: 100%;">
+                        <button type="button" id="confirmCropBtn" class="btn btn-success btn-sm mt-2">
+                            <i class="bi bi-check-lg"></i> Confirm Crop
+                        </button>
+                        <span id="cropStatus" class="text-success small ms-2" style="display: none;">
+                            <i class="bi bi-check-circle-fill"></i> Crop confirmed
+                        </span>
+                    </div>
+
+                    <input type="hidden" name="cropped_image" id="croppedImageInput">
                 </div>
 
                 <button type="submit" class="btn btn-success">
@@ -83,5 +96,53 @@
             </form>
         </div>
     </div>
+@push('styles')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
+@endpush
 
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<script>
+    let cropper = null;
+    const imageInput = document.getElementById('image');
+    const cropPreview = document.getElementById('cropPreview');
+    const cropContainer = document.getElementById('cropContainer');
+    const croppedImageInput = document.getElementById('croppedImageInput');
+    const confirmCropBtn = document.getElementById('confirmCropBtn');
+    const cropStatus = document.getElementById('cropStatus');
+
+    imageInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        croppedImageInput.value = '';
+        cropStatus.style.display = 'none';
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            cropPreview.src = event.target.result;
+            cropContainer.style.display = 'block';
+
+            if (cropper) {
+                cropper.destroy();
+            }
+
+            cropper = new Cropper(cropPreview, {
+                aspectRatio: 4 / 3,
+                viewMode: 1,
+                autoCropArea: 1,
+            });
+        };
+        reader.readAsDataURL(file);
+    });
+
+    confirmCropBtn.addEventListener('click', function () {
+        if (!cropper) return;
+
+        const canvas = cropper.getCroppedCanvas({ width: 800, height: 600 });
+        croppedImageInput.value = canvas.toDataURL('image/jpeg', 0.85);
+        cropStatus.style.display = 'inline';
+    });
+</script>
+@endpush
 @endsection

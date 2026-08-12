@@ -39,12 +39,11 @@ class ProductManagementController extends Controller
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|max:2048',
         ]);
 
         $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+        if ($request->filled('cropped_image')) {
+            $imagePath = $this->saveCroppedImage($request->input('cropped_image'));
         }
 
         Product::create([
@@ -96,12 +95,11 @@ class ProductManagementController extends Controller
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|max:2048',
         ]);
 
         $imagePath = $product->image_url;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+        if ($request->filled('cropped_image')) {
+            $imagePath = $this->saveCroppedImage($request->input('cropped_image'));
         }
 
         $product->update([
@@ -128,5 +126,18 @@ class ProductManagementController extends Controller
         return redirect()
             ->route('admin.products.index')
             ->with('success', 'Product deleted successfully.');
+    }
+    /**
+     * Decode a base64 cropped image and store it.
+     */
+    private function saveCroppedImage(string $base64Image): string
+    {
+        $imageData = explode(',', $base64Image)[1] ?? $base64Image;
+        $decoded = base64_decode($imageData);
+
+        $filename = 'products/' . uniqid() . '.jpg';
+        \Storage::disk('public')->put($filename, $decoded);
+
+        return $filename;
     }
 }

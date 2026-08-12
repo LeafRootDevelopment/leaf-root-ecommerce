@@ -42,6 +42,13 @@
         @forelse ($products as $product)
             <div class="col-md-4">
                 <div class="card h-100 shadow-sm border-0">
+                    @if ($product->image_url)
+                        <img src="{{ asset('storage/' . $product->image_url) }}" class="card-img-top" alt="{{ $product->name }}" style="aspect-ratio: 4/3; object-fit: cover; width: 100%;">
+                    @else
+                        <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="aspect-ratio: 4/3;">
+                            <i class="bi bi-image fs-1"></i>
+                        </div>
+                    @endif
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">
                             <a href="{{ route('products.show', $product) }}" class="text-decoration-none text-dark">
