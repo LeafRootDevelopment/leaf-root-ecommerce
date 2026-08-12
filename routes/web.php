@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\Admin\CategoryManagementController;
+use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CheckoutController;
@@ -63,4 +64,18 @@ Route::middleware(['auth'])->group(function () {
         CategoryManagementController::class
     )->names('admin.categories');
 
+    Route::get(
+        '/admin/orders',
+        [OrderManagementController::class, 'index']
+    )->name('admin.orders.index');
+
+    Route::get(
+        '/admin/orders/{order}',
+        [OrderManagementController::class, 'show']
+    )->name('admin.orders.show');
+
+    Route::patch(
+        '/admin/orders/{order}/status',
+        [OrderManagementController::class, 'updateStatus']
+    )->name('admin.orders.update-status');
 });
