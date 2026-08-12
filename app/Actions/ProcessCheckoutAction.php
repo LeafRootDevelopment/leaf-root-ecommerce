@@ -23,8 +23,10 @@ class ProcessCheckoutAction
                 $user = User::firstOrCreate(
                     ['email' => $validatedData['email']],
                     [
-                        'name'     => $validatedData['first_name'] . ' ' . $validatedData['last_name'],
-                        'password' => bcrypt(Str::random(16)),
+                        'first_name' => $validatedData['first_name'],
+                        'last_name'  => $validatedData['last_name'],
+                        'role'       => 'customer',
+                        'password'   => bcrypt(Str::random(16)),
                     ]
                 );
             }
