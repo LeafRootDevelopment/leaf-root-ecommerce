@@ -38,26 +38,40 @@ return [
             'report' => false,
         ],
 
-        'public' => env('AWS_BUCKET') ? [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
-        ] : [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
-        ],
+        'public' => (function () {
+            $cloudConfig = env('LARAVEL_CLOUD_DISK_CONFIG');
+
+            if ($cloudConfig) {
+                $disks = json_decode($cloudConfig, true) ?? [];
+
+                foreach ($disks as $disk) {
+                    if (($disk['disk'] ?? null) === 'public') {
+                        return [
+                            'driver' => 's3',
+                            'key' => $disk['access_key_id'],
+                            'secret' => $disk['access_key_secret'],
+                            'region' => $disk['default_region'],
+                            'bucket' => $disk['bucket'],
+                            'url' => $disk['url'],
+                            'endpoint' => $disk['endpoint'],
+                            'use_path_style_endpoint' => $disk['use_path_style_endpoint'] ?? false,
+                            'visibility' => 'public',
+                            'throw' => false,
+                            'report' => false,
+                        ];
+                    }
+                }
+            }
+
+            return [
+                'driver' => 'local',
+                'root' => storage_path('app/public'),
+                'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+                'visibility' => 'public',
+                'throw' => false,
+                'report' => false,
+            ];
+        })(),
 
         's3' => [
             'driver' => 's3',
