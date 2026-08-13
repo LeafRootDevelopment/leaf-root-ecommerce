@@ -43,7 +43,7 @@
             <div class="col-md-4">
                 <div class="card h-100 shadow-sm border-0">
                     @if ($product->image_url)
-                        <img src="{{ asset('storage/' . $product->image_url) }}" class="card-img-top" alt="{{ $product->name }}" style="aspect-ratio: 4/3; object-fit: cover; width: 100%;">
+                        <img src="{{ $product->image_display_url }}" class="card-img-top" alt="{{ $product->name }}" style="aspect-ratio: 4/3; object-fit: cover; width: 100%;">
                     @else
                         <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="aspect-ratio: 4/3;">
                             <i class="bi bi-image fs-1"></i>

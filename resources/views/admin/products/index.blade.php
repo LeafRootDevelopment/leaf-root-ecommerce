@@ -31,7 +31,7 @@
                             <tr>
                                 <td class="ps-4">
                                     @if ($product->image_url)
-                                        <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                                        <img src="{{ $product->image_display_url }}" alt="{{ $product->name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
                                     @else
                                         <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="width: 50px; height: 50px; border-radius: 6px;">
                                             <i class="bi bi-image"></i>

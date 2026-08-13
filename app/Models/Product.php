@@ -26,4 +26,13 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
+
+    public function getImageDisplayUrlAttribute(): ?string
+    {
+        if (!$this->image_url) {
+            return null;
+        }
+
+        return \Storage::disk('public')->url($this->image_url);
+    }
 }

@@ -14,7 +14,7 @@
             <div class="row g-4">
                 <div class="col-md-6">
                     @if ($product->image_url)
-                        <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" class="img-fluid rounded" style="width: 100%; aspect-ratio: 4/3; object-fit: cover;">
+                        <img src="{{ $product->image_display_url }}" alt="{{ $product->name }}" class="img-fluid rounded" style="width: 100%; aspect-ratio: 4/3; object-fit: cover;">
                     @else
                         <div class="bg-light d-flex align-items-center justify-content-center text-muted rounded" style="width: 100%; aspect-ratio: 4/3;">
                             <i class="bi bi-image fs-1"></i>

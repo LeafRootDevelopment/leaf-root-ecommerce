@@ -69,7 +69,7 @@
                     @if ($product->image_url)
                         <div class="mb-2">
                             <span class="small text-muted d-block mb-1">Current image:</span>
-                            <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" style="width: 120px; height: 90px; object-fit: cover; border-radius: 6px;">
+                            <img src="{{ $product->image_display_url }}" alt="{{ $product->name }}" style="width: 120px; height: 90px; object-fit: cover; border-radius: 6px;">
                         </div>
                     @endif
 
