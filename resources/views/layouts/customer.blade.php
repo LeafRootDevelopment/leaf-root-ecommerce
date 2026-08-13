@@ -65,7 +65,14 @@
                                 </a>
                             </li>
                         @endif
-
+                        @if (Route::has('contact.create'))
+                            <li class="nav-item">
+                                <a href="{{ route('contact.create') }}" class="nav-link px-2 {{ request()->routeIs('contact.*') ? 'active fw-bold text-success' : '' }}">
+                                    <i class="bi bi-envelope me-1"></i>
+                                    Contact
+                                </a>
+                            </li>
+                        @endif
                         {{-- Guest Navigation --}}
                         @guest
                             @if (Route::has('login'))
